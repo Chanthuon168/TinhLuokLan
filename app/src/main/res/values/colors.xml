@@ -10,6 +10,7 @@
     <color name="divider">#BDBDBD</color>
     <color name="white">#ffffff</color>
     <color name="transparent">#00ffffff</color>
+    <color name="transparent_white">#50ffffff</color>
     <color name="divide">#e2e4e7</color>
     <color name="red">#e12f07</color>
     <color name="green">#2e9c1d</color>

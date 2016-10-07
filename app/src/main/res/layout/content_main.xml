@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/divide"
+    android:background="@color/white"
     android:orientation="vertical"
     app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
@@ -61,7 +61,6 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:fontFamily="sans-serif-medium"
                         android:padding="10dp"
                         android:text="Special Promotion"
                         android:textColor="@color/primary_text"
@@ -73,6 +72,7 @@
                         android:gravity="right">
 
                         <TextView
+                            android:id="@+id/morePromotion"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:background="?attr/selectableItemBackgroundBorderless"
@@ -122,7 +122,6 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:fontFamily="sans-serif-medium"
                         android:padding="10dp"
                         android:text="Recently Added"
                         android:textColor="@color/primary_text"
@@ -134,6 +133,7 @@
                         android:gravity="right">
 
                         <TextView
+                            android:id="@+id/moreRecently"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:background="?attr/selectableItemBackgroundBorderless"
