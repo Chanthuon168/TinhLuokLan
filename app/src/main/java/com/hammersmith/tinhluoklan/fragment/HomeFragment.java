@@ -12,6 +12,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.hammersmith.tinhluoklan.ApiClient;
+import com.hammersmith.tinhluoklan.ApiInterface;
 import com.hammersmith.tinhluoklan.MoreProductActivity;
 import com.hammersmith.tinhluoklan.ProductActivity;
 import com.hammersmith.tinhluoklan.R;
@@ -23,6 +25,10 @@ import com.hammersmith.tinhluoklan.model.Promotion;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * Created by Chan Thuon on 10/6/2016.
@@ -59,11 +65,23 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         recyclerViewPromotion.setLayoutManager(layoutPromotion);
         recyclerViewPromotion.setAdapter(promotionAdapter);
 
+        ApiInterface serviceRecently = ApiClient.getClient().create(ApiInterface.class);
+        Call<List<Product>> callRecently = serviceRecently.getRecentlyAdded();
+        callRecently.enqueue(new Callback<List<Product>>() {
+            @Override
+            public void onResponse(Call<List<Product>> call, Response<List<Product>> response) {
+                products = response.body();
+                layoutManager = new LinearLayoutManager(getActivity());
+                productAdapter = new ProductAdapter(getActivity(), products);
+                recyclerView.setLayoutManager(layoutManager);
+                recyclerView.setAdapter(productAdapter);
+            }
 
-        layoutManager = new LinearLayoutManager(getActivity());
-        productAdapter = new ProductAdapter(getActivity(), products);
-        recyclerView.setLayoutManager(layoutManager);
-        recyclerView.setAdapter(productAdapter);
+            @Override
+            public void onFailure(Call<List<Product>> call, Throwable t) {
+
+            }
+        });
 
         viewBannerGallery.flip(listData, true);
         return root;

@@ -1,9 +1,11 @@
 package com.hammersmith.tinhluoklan.adapter;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Paint;
 import android.graphics.Typeface;
+import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,9 +13,11 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.hammersmith.tinhluoklan.ApiClient;
 import com.hammersmith.tinhluoklan.CarDedailActivity;
 import com.hammersmith.tinhluoklan.R;
 import com.hammersmith.tinhluoklan.model.Product;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,6 +29,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.MyViewHo
     private Activity activity;
     private Product product;
     private List<Product> products = new ArrayList<>();
+    private Context context;
 
     public ProductAdapter(Activity activity, List<Product> products) {
         this.activity = activity;
@@ -41,7 +46,11 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.MyViewHo
 
     @Override
     public void onBindViewHolder(MyViewHolder holder, int position) {
-
+        Uri uri = Uri.parse(ApiClient.BASE_URL + products.get(position).getImage());
+        context = holder.image.getContext();
+        Picasso.with(context).load(uri).into(holder.image);
+        holder.title.setText(products.get(position).getName());
+        holder.price.setText(products.get(position).getPrice());
         holder.price.setPaintFlags(holder.price.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
         holder.image.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -55,7 +64,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.MyViewHo
 
     @Override
     public int getItemCount() {
-        return 5;
+        return products.size();
     }
 
     public class MyViewHolder extends RecyclerView.ViewHolder {

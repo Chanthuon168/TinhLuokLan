@@ -1,5 +1,6 @@
 package com.hammersmith.tinhluoklan;
 
+import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.os.PersistableBundle;
 import android.support.annotation.Nullable;
@@ -28,6 +29,7 @@ public class CategoryActivity extends AppCompatActivity {
     private GridLayoutManager layoutManager;
     private List<Category> categories = new ArrayList<>();
     private Toolbar toolbar;
+    private ProgressDialog progressDialog;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -46,7 +48,7 @@ public class CategoryActivity extends AppCompatActivity {
         });
         recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
         layoutManager = new GridLayoutManager(this, 3);
-
+        progressDialog = ProgressDialog.show(this, null,"Loading...", true);
         ApiInterface serviceCategory = ApiClient.getClient().create(ApiInterface.class);
         Call<List<Category>> callCategory = serviceCategory.getCategory();
         callCategory.enqueue(new Callback<List<Category>>() {
@@ -56,12 +58,31 @@ public class CategoryActivity extends AppCompatActivity {
                 categoryAdapter = new CategoryAdapter(CategoryActivity.this, categories);
                 recyclerView.setLayoutManager(layoutManager);
                 recyclerView.setAdapter(categoryAdapter);
+                hideDialog();
             }
 
             @Override
             public void onFailure(Call<List<Category>> call, Throwable t) {
-
+                hideDialog();
             }
         });
+    }
+    private void hideDialog(){
+
+        new Thread(new Runnable() {
+            @Override
+            public void run()
+            {
+                // do the thing that takes a long time
+
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run()
+                    {
+                        progressDialog.dismiss();
+                    }
+                });
+            }
+        }).start();
     }
 }
