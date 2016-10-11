@@ -15,6 +15,10 @@ import com.hammersmith.tinhluoklan.model.Category;
 import java.util.ArrayList;
 import java.util.List;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 /**
  * Created by Chan Thuon on 10/7/2016.
  */
@@ -42,8 +46,22 @@ public class CategoryActivity extends AppCompatActivity {
         });
         recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
         layoutManager = new GridLayoutManager(this, 3);
-        categoryAdapter = new CategoryAdapter(this, categories);
-        recyclerView.setLayoutManager(layoutManager);
-        recyclerView.setAdapter(categoryAdapter);
+
+        ApiInterface serviceCategory = ApiClient.getClient().create(ApiInterface.class);
+        Call<List<Category>> callCategory = serviceCategory.getCategory();
+        callCategory.enqueue(new Callback<List<Category>>() {
+            @Override
+            public void onResponse(Call<List<Category>> call, Response<List<Category>> response) {
+                categories = response.body();
+                categoryAdapter = new CategoryAdapter(CategoryActivity.this, categories);
+                recyclerView.setLayoutManager(layoutManager);
+                recyclerView.setAdapter(categoryAdapter);
+            }
+
+            @Override
+            public void onFailure(Call<List<Category>> call, Throwable t) {
+
+            }
+        });
     }
 }

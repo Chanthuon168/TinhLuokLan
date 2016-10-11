@@ -17,10 +17,13 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.hammersmith.tinhluoklan.fragment.HomeFragment;
+import com.joanzapata.iconify.IconDrawable;
+import com.joanzapata.iconify.fonts.FontAwesomeIcons;
 import com.joanzapata.iconify.widget.IconTextView;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     private HomeFragment homeFragment;
+    private Boolean helper_home = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,6 +44,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        Menu m = navigationView.getMenu();
+        m.findItem(R.id.nav_home).setIcon(new IconDrawable(this, FontAwesomeIcons.fa_home));
+        m.findItem(R.id.nav_products).setIcon(new IconDrawable(this, FontAwesomeIcons.fa_list));
+        m.findItem(R.id.nav_sell).setIcon(new IconDrawable(this, FontAwesomeIcons.fa_camera));
+        m.findItem(R.id.nav_account).setIcon(new IconDrawable(this, FontAwesomeIcons.fa_user));
+        m.findItem(R.id.nav_my_product).setIcon(new IconDrawable(this, FontAwesomeIcons.fa_tags));
+        m.findItem(R.id.nav_favorite).setIcon(new IconDrawable(this, FontAwesomeIcons.fa_star_half_o));
+        m.findItem(R.id.nav_logout).setIcon(new IconDrawable(this, FontAwesomeIcons.fa_sign_out));
     }
 
     private void initScreen() {
@@ -49,6 +61,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         transaction.add(R.id.container_framelayout, homeFragment);
         transaction.addToBackStack(null);
         transaction.commit();
+        helper_home = true;
     }
 
     @Override
@@ -90,19 +103,26 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_camera) {
-            // Handle the camera action
-        } else if (id == R.id.nav_gallery) {
+        if (id == R.id.nav_home) {
+            if (helper_home == false) {
+                initScreen();
+            }
+        } else if (id == R.id.nav_products) {
             Intent intent = new Intent(MainActivity.this, CategoryActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
             startActivity(intent);
-        } else if (id == R.id.nav_slideshow) {
 
-        } else if (id == R.id.nav_manage) {
+        } else if (id == R.id.nav_sell) {
 
-        } else if (id == R.id.nav_share) {
 
-        } else if (id == R.id.nav_send) {
+        } else if (id == R.id.nav_account) {
+
+        } else if (id == R.id.nav_my_product) {
+
+        } else if (id == R.id.nav_favorite) {
+
+
+        } else if (id == R.id.nav_logout) {
 
         }
 
