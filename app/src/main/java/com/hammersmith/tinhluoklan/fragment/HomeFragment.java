@@ -1,10 +1,12 @@
 package com.hammersmith.tinhluoklan.fragment;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Paint;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -40,6 +42,9 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
     private List<Product> products = new ArrayList<>();
     private List<Promotion> promotions = new ArrayList<>();
     private PromotionAdapter promotionAdapter;
+    private ProgressDialog mProgressDialog;
+    private SwipeRefreshLayout swipeRefresh;
+    private int sizePromotion, sizeRecently;
 
     public HomeFragment() {
     }
@@ -57,13 +62,40 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         listData.add(viewBannerGallery.new BannerItem("http://www.mazdaofeverett.com/resrc/media/image/143580/mazda3banner.jpg", "http://www.gobeautyvoice.com", "MAZDA CAMBODIA SHOP"));
         listData.add(viewBannerGallery.new BannerItem("http://www.autosarena.com/wp-content/uploads/2014/11/Audi-A4-Premium-Sport-Banner.png", "https://s-media-cache-ak0.pinimg.com", "AUDI CAMBODIA SHOP"));
 
+        showProgressDialog();
         recyclerViewPromotion = (RecyclerView) root.findViewById(R.id.recyclerViewPromotion);
         recyclerView = (RecyclerView) root.findViewById(R.id.recyclerView);
+        swipeRefresh = (SwipeRefreshLayout) root.findViewById(R.id.swiperefresh);
 
-        layoutPromotion = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
-        promotionAdapter = new PromotionAdapter(getActivity(), promotions);
-        recyclerViewPromotion.setLayoutManager(layoutPromotion);
-        recyclerViewPromotion.setAdapter(promotionAdapter);
+        swipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                refreshPromotion();
+                refreshRecently();
+//                if (sizeBanner < 1) {
+//                    refreshBanner();
+//                }
+            }
+        });
+
+        ApiInterface servicePromotion = ApiClient.getClient().create(ApiInterface.class);
+        Call<List<Promotion>> callPromotion = servicePromotion.getPromotion();
+        callPromotion.enqueue(new Callback<List<Promotion>>() {
+            @Override
+            public void onResponse(Call<List<Promotion>> call, Response<List<Promotion>> response) {
+                promotions = response.body();
+                sizePromotion = products.size();
+                layoutPromotion = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
+                promotionAdapter = new PromotionAdapter(getActivity(), promotions);
+                recyclerViewPromotion.setLayoutManager(layoutPromotion);
+                recyclerViewPromotion.setAdapter(promotionAdapter);
+            }
+
+            @Override
+            public void onFailure(Call<List<Promotion>> call, Throwable t) {
+
+            }
+        });
 
         ApiInterface serviceRecently = ApiClient.getClient().create(ApiInterface.class);
         Call<List<Product>> callRecently = serviceRecently.getRecentlyAdded();
@@ -71,10 +103,12 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
             @Override
             public void onResponse(Call<List<Product>> call, Response<List<Product>> response) {
                 products = response.body();
+                sizeRecently = products.size();
                 layoutManager = new LinearLayoutManager(getActivity());
                 productAdapter = new ProductAdapter(getActivity(), products);
                 recyclerView.setLayoutManager(layoutManager);
                 recyclerView.setAdapter(productAdapter);
+                hideProgressDialog();
             }
 
             @Override
@@ -87,21 +121,92 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         return root;
     }
 
+    private void refreshPromotion() {
+        final ApiInterface servicePromotion = ApiClient.getClient().create(ApiInterface.class);
+        Call<List<Promotion>> callPromotion = servicePromotion.getPromotion();
+        callPromotion.enqueue(new Callback<List<Promotion>>() {
+            @Override
+            public void onResponse(Call<List<Promotion>> call, Response<List<Promotion>> response) {
+                promotions = response.body();
+                if (sizePromotion != promotions.size()) {
+                    layoutPromotion = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
+                    promotionAdapter = new PromotionAdapter(getActivity(), promotions);
+                    recyclerViewPromotion.setLayoutManager(layoutPromotion);
+                    recyclerViewPromotion.setAdapter(promotionAdapter);
+                    sizePromotion = promotions.size();
+                }
+                swipeRefresh.setRefreshing(false);
+            }
+
+            @Override
+            public void onFailure(Call<List<Promotion>> call, Throwable t) {
+
+            }
+        });
+    }
+
+    private void refreshRecently() {
+        ApiInterface serviceRecently = ApiClient.getClient().create(ApiInterface.class);
+        Call<List<Product>> callRecently = serviceRecently.getRecentlyAdded();
+        callRecently.enqueue(new Callback<List<Product>>() {
+            @Override
+            public void onResponse(Call<List<Product>> call, Response<List<Product>> response) {
+                products = response.body();
+                if (products.size() != sizeRecently) {
+                    layoutManager = new LinearLayoutManager(getActivity());
+                    productAdapter = new ProductAdapter(getActivity(), products);
+                    recyclerView.setLayoutManager(layoutManager);
+                    recyclerView.setAdapter(productAdapter);
+                    sizeRecently = products.size();
+                }
+                swipeRefresh.setRefreshing(false);
+                hideProgressDialog();
+            }
+
+            @Override
+            public void onFailure(Call<List<Product>> call, Throwable t) {
+
+            }
+        });
+    }
+
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.morePromotion:
                 Intent intent = new Intent(getActivity(), MoreProductActivity.class);
-                intent.putExtra("key","promotion");
+                intent.putExtra("key", "promotion");
                 intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
                 startActivity(intent);
                 break;
             case R.id.moreRecently:
                 Intent intentRecently = new Intent(getActivity(), MoreProductActivity.class);
-                intentRecently.putExtra("key","recently");
+                intentRecently.putExtra("key", "recently");
                 intentRecently.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
                 startActivity(intentRecently);
                 break;
         }
+    }
+
+    private void showProgressDialog() {
+        if (mProgressDialog == null) {
+            mProgressDialog = new ProgressDialog(getActivity());
+            mProgressDialog.setMessage("Loading...");
+            mProgressDialog.setIndeterminate(true);
+        }
+
+        mProgressDialog.show();
+    }
+
+    private void hideProgressDialog() {
+        if (mProgressDialog != null && mProgressDialog.isShowing()) {
+            mProgressDialog.hide();
+        }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        hideProgressDialog();
     }
 }

@@ -3,19 +3,15 @@ package com.hammersmith.tinhluoklan.model;
 import com.google.gson.annotations.SerializedName;
 
 /**
- * Created by Chan Thuon on 10/7/2016.
+ * Created by Chan Thuon on 10/12/2016.
  */
-public class Category {
+public class Image {
     @SerializedName("id")
     private int id;
-    @SerializedName("name")
-    private String name;
     @SerializedName("image")
     private String image;
-    @SerializedName("car_id")
-    private int carId;
+    public Image(){
 
-    public Category() {
     }
 
     public int getId() {
@@ -26,27 +22,11 @@ public class Category {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
     public String getImage() {
         return image;
     }
 
     public void setImage(String image) {
         this.image = image;
-    }
-
-    public int getCarId() {
-        return carId;
-    }
-
-    public void setCarId(int carId) {
-        this.carId = carId;
     }
 }

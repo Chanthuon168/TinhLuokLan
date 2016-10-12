@@ -45,7 +45,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.MyViewHo
     }
 
     @Override
-    public void onBindViewHolder(MyViewHolder holder, int position) {
+    public void onBindViewHolder(MyViewHolder holder, final int position) {
         Uri uri = Uri.parse(ApiClient.BASE_URL + products.get(position).getImage());
         context = holder.image.getContext();
         Picasso.with(context).load(uri).into(holder.image);
@@ -56,6 +56,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.MyViewHo
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(activity, CarDedailActivity.class);
+                intent.putExtra("id",products.get(position).getId());
                 intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
                 activity.startActivity(intent);
             }

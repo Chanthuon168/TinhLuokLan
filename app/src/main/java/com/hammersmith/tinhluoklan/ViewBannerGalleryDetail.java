@@ -53,7 +53,7 @@ public class ViewBannerGalleryDetail extends RelativeLayout {
                     for (; mListData.size() > 0 && i < mListData.size(); i++) {
                         ImageView iv = new ImageView(mContext);
                         iv.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
-                        iv.setScaleType(ImageView.ScaleType.FIT_XY);
+                        iv.setScaleType(ImageView.ScaleType.CENTER_CROP);
                         final BannerItem item = mListData.get(i);
                         String bannerDir = Utils.getExternalPathPrefix(mContext, "banner");
 //                        log("bannerDir:" + bannerDir);
