@@ -54,8 +54,9 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.MyView
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(activity, ProductActivity.class);
-                intent.putExtra("id",categories.get(position).getId());
+                intent.putExtra("id", categories.get(position).getId());
                 intent.putExtra("name", categories.get(position).getName());
+                intent.putExtra("image", ApiClient.BASE_URL + categories.get(position).getImage());
                 intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
                 activity.startActivity(intent);
             }

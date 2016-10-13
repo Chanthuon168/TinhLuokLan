@@ -57,7 +57,8 @@ public class PromotionAdapter extends RecyclerView.Adapter<PromotionAdapter.MyVi
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(activity, CarDedailActivity.class);
-                intent.putExtra("id",promotions.get(position).getId());
+                intent.putExtra("id", promotions.get(position).getId());
+                intent.putExtra("name", promotions.get(position).getName());
                 intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
                 activity.startActivity(intent);
             }

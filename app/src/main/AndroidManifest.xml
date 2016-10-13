@@ -9,8 +9,8 @@
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
-        android:supportsRtl="true"
         android:largeHeap="true"
+        android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
             android:name=".MainActivity"
@@ -30,9 +30,17 @@
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".CarDedailActivity"
+            android:theme="@style/AppTheme.AppThemeNoActionBar">
+
+        </activity>
+        <activity
+            android:name=".MoreProductActivity"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".MoreProductActivity"
-            android:theme="@style/AppTheme.NoActionBar" ></activity>
+        <activity
+            android:name=".Test"
+            android:theme="@style/AppTheme.AppThemeNoActionBar">
+
+        </activity>
     </application>
 
 </manifest>

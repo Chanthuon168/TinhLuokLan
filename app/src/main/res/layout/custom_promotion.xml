@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
     android:layout_width="350dp"
-    android:layout_height="230dp"
+    android:layout_height="250dp"
     android:orientation="vertical">
 
 
@@ -28,7 +28,7 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
-                    android:layout_weight="4.7">
+                    android:layout_weight="4.9">
 
                     <RelativeLayout
                         android:layout_width="match_parent"
@@ -41,21 +41,20 @@
                             android:adjustViewBounds="true"
                             android:background="?attr/selectableItemBackgroundBorderless"
                             android:clickable="true"
-                            android:scaleType="centerCrop"
-                            />
+                            android:scaleType="centerCrop" />
 
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_alignParentBottom="true"
                             android:orientation="horizontal"
-                            android:weightSum="4"
-                            android:padding="10dp">
+                            android:padding="10dp"
+                            android:weightSum="4">
 
                             <LinearLayout
                                 android:layout_width="0dp"
-                                android:layout_weight="3"
                                 android:layout_height="match_parent"
+                                android:layout_weight="3"
                                 android:orientation="vertical">
 
                                 <TextView
@@ -74,9 +73,9 @@
                             </LinearLayout>
 
                             <LinearLayout
-                                android:layout_weight="1"
                                 android:layout_width="0dp"
                                 android:layout_height="match_parent"
+                                android:layout_weight="1"
                                 android:gravity="right"
                                 android:orientation="vertical">
 
@@ -102,16 +101,16 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
-                    android:layout_weight="1.3"
+                    android:layout_weight="1.1"
                     android:orientation="horizontal"
                     android:weightSum="2">
 
                     <LinearLayout
-                        android:clickable="true"
-                        android:background="?attr/selectableItemBackground"
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
+                        android:background="?attr/selectableItemBackground"
+                        android:clickable="true"
                         android:gravity="center_vertical"
                         android:orientation="horizontal"
                         android:paddingLeft="10dp">
@@ -146,26 +145,26 @@
                         android:layout_weight="1">
 
                         <LinearLayout
-                            android:clickable="true"
-                            android:background="?attr/selectableItemBackground"
                             android:layout_width="0dp"
                             android:layout_height="match_parent"
                             android:layout_weight="1"
+                            android:background="?attr/selectableItemBackground"
+                            android:clickable="true"
                             android:gravity="center_vertical|end"
                             android:orientation="horizontal"
                             android:paddingRight="10dp">
 
                             <ImageView
-                                android:layout_marginRight="5dp"
                                 android:id="@+id/comment"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
+                                android:layout_marginRight="5dp"
                                 android:src="@drawable/comment_outline" />
 
                             <TextView
-                                android:layout_marginRight="5dp"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
+                                android:layout_marginRight="5dp"
                                 android:text="Comment"
                                 android:textColor="@color/colorAccent"
                                 android:textStyle="bold" />

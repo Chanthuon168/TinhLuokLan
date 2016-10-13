@@ -13,6 +13,7 @@
     <color name="transparent_white">#50ffffff</color>
     <color name="divide">#e2e4e7</color>
     <color name="red">#e12f07</color>
+    <color name="red_light">#f2502b</color>
     <color name="green">#2e9c1d</color>
     <color name="blue">#244dd2</color>
 </resources>

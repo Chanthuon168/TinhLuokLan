@@ -21,6 +21,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.ViewFlipper;
 
+import com.squareup.picasso.Picasso;
+
 import java.io.File;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -35,7 +37,7 @@ public class ViewBannerGalleryDetail extends RelativeLayout {
     private TextView tvHint;
     private TextView tvSubtitle;
     private float lastX;
-    private final long FLIP_NEXT_DELAY = 2000;
+    private final long FLIP_NEXT_DELAY = 3000;
     private final static int WHAT_ADD_VIEW = 101, WHAT_DOWNLOAD_ERROR = 102;
     private ArrayList<BannerItem> mListData = new ArrayList<>();
     LinearLayout layoutBannerIndex;
@@ -79,7 +81,11 @@ public class ViewBannerGalleryDetail extends RelativeLayout {
                                     }
                                 }
                                 if (bitmap != null) {
-                                    iv.setImageBitmap(bitmap);
+                                    Log.d("bitmap", "" + item.imageUrl);
+                                    Uri uri = Uri.parse(item.imageUrl);
+                                    mContext = iv.getContext();
+                                    Picasso.with(mContext).load(uri).into(iv);
+//                                    iv.setImageBitmap(bitmap);
                                     mViewFlipper.addView(iv);
                                     if (!TextUtils.isEmpty(item.linkUrl) && item.linkUrl.startsWith("http://")) {
                                         iv.setOnClickListener(new OnClickListener() {
@@ -93,7 +99,7 @@ public class ViewBannerGalleryDetail extends RelativeLayout {
                                     }
 
                                     ImageView image = new ImageView(mContext);
-                                    image.setPadding(3,0,3,0);
+                                    image.setPadding(3, 0, 3, 0);
                                     image.setScaleType(ImageView.ScaleType.CENTER_CROP);
                                     image.setAdjustViewBounds(true);
                                     if (i == 0) {
@@ -144,7 +150,7 @@ public class ViewBannerGalleryDetail extends RelativeLayout {
             }
             for (int i = 0; layoutBannerIndex != null && i < layoutBannerIndex.getChildCount(); i++) {
                 ImageView iv = (ImageView) layoutBannerIndex.getChildAt(i);
-                iv.setPadding(3,0,3,0);
+                iv.setPadding(3, 0, 3, 0);
                 if (i == mViewFlipper.getDisplayedChild()) {
                     iv.setBackgroundResource(android.R.drawable.presence_online);
 
@@ -187,7 +193,7 @@ public class ViewBannerGalleryDetail extends RelativeLayout {
             }
         });
         layoutBannerIndex = (LinearLayout) layout.findViewById(R.id.layout_dots);
-        tvSubtitle=(TextView)layout.findViewById(R.id.tv_subtitle);
+        tvSubtitle = (TextView) layout.findViewById(R.id.tv_subtitle);
         mViewFlipper = (ViewFlipper) layout.findViewById(R.id.viewflipper);
         mViewFlipper.setFlipInterval(2000);
 //        mViewFlipper.setAutoStart(true);

@@ -14,9 +14,10 @@
         <item name="android:actionMenuTextColor">@color/primary_text</item>
     </style>
 
-    <style name="AppThemeNoActionBar" parent="Theme.AppCompat.Light.NoActionBar">
+    <style name="AppTheme.AppThemeNoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
+        <item name="android:actionMenuTextColor">@color/primary_text</item>
     </style>
 
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
@@ -43,6 +44,11 @@
 
     <style name="ActionBarThemeOverlay">
         <item name="colorControlNormal">#ffffff</item>
+    </style>
+
+    <style name="HeaderTitleStyle" parent="@android:style/TextAppearance">
+        <item name="android:textColor">#FFFFFF</item>
+        <item name="android:textSize">20sp</item>
     </style>
 
 </resources>

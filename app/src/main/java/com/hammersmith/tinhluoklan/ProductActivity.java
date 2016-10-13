@@ -1,16 +1,21 @@
 package com.hammersmith.tinhluoklan;
 
 import android.app.ProgressDialog;
+import android.content.Context;
+import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.hammersmith.tinhluoklan.adapter.ProductAdapter;
 import com.hammersmith.tinhluoklan.model.Product;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,18 +31,24 @@ public class ProductActivity extends AppCompatActivity {
     private List<Product> products = new ArrayList<>();
     private Toolbar toolbar;
     private int id;
-    private String name;
+    private String name, image;
+    private ImageView imageView;
     private ProgressDialog mProgressDialog;
+    private Context context;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_product);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
+        imageView = (ImageView) findViewById(R.id.imageView);
         recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
         layoutManager = new LinearLayoutManager(ProductActivity.this);
-        id = getIntent().getIntExtra("id",0);
+        id = getIntent().getIntExtra("id", 0);
         name = getIntent().getStringExtra("name");
+        image = getIntent().getStringExtra("image");
+
+        Log.d("imageView", image);
         toolbar.setTitle(name);
         setSupportActionBar(toolbar);
         showProgressDialog();
@@ -55,18 +66,26 @@ public class ProductActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<List<Product>> call, Response<List<Product>> response) {
                 products = response.body();
-                productAdapter = new ProductAdapter(ProductActivity.this, products);
-                recyclerView.setLayoutManager(layoutManager);
-                recyclerView.setAdapter(productAdapter);
+                if (products.size() < 1) {
+                    findViewById(R.id.lNoData).setVisibility(View.VISIBLE);
+                    Uri uri = Uri.parse(image);
+                    context = imageView.getContext();
+                    Picasso.with(context).load(uri).into(imageView);
+                } else {
+                    productAdapter = new ProductAdapter(ProductActivity.this, products);
+                    recyclerView.setLayoutManager(layoutManager);
+                    recyclerView.setAdapter(productAdapter);
+                }
                 hideProgressDialog();
             }
 
             @Override
             public void onFailure(Call<List<Product>> call, Throwable t) {
-                Toast.makeText(getApplicationContext(),t.getMessage().toString(),Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), t.getMessage().toString(), Toast.LENGTH_SHORT).show();
             }
         });
     }
+
     private void showProgressDialog() {
         if (mProgressDialog == null) {
             mProgressDialog = new ProgressDialog(this);

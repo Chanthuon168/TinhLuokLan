@@ -57,6 +57,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.MyViewHo
             public void onClick(View view) {
                 Intent intent = new Intent(activity, CarDedailActivity.class);
                 intent.putExtra("id",products.get(position).getId());
+                intent.putExtra("name", products.get(position).getName());
                 intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
                 activity.startActivity(intent);
             }
