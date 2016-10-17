@@ -36,12 +36,10 @@ import retrofit2.Response;
  * Created by Chan Thuon on 10/6/2016.
  */
 public class HomeFragment extends Fragment implements View.OnClickListener {
-    private RecyclerView recyclerView, recyclerViewPromotion;
+    private RecyclerView recyclerView;
     private ProductAdapter productAdapter;
-    private LinearLayoutManager layoutManager, layoutPromotion;
+    private LinearLayoutManager layoutManager;
     private List<Product> products = new ArrayList<>();
-    private List<Promotion> promotions = new ArrayList<>();
-    private PromotionAdapter promotionAdapter;
     private ProgressDialog mProgressDialog;
     private SwipeRefreshLayout swipeRefresh;
     private int sizePromotion, sizeRecently;
@@ -53,7 +51,6 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.content_main, container, false);
-        root.findViewById(R.id.morePromotion).setOnClickListener(this);
         root.findViewById(R.id.moreRecently).setOnClickListener(this);
         final ViewBannerGallery viewBannerGallery = (ViewBannerGallery) root.findViewById(R.id.viewBannerGallery);
         final ArrayList<ViewBannerGallery.BannerItem> listData = new ArrayList<ViewBannerGallery.BannerItem>();
@@ -63,37 +60,17 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         listData.add(viewBannerGallery.new BannerItem("http://www.autosarena.com/wp-content/uploads/2014/11/Audi-A4-Premium-Sport-Banner.png", "https://s-media-cache-ak0.pinimg.com", "AUDI CAMBODIA SHOP"));
 
         showProgressDialog();
-        recyclerViewPromotion = (RecyclerView) root.findViewById(R.id.recyclerViewPromotion);
         recyclerView = (RecyclerView) root.findViewById(R.id.recyclerView);
         swipeRefresh = (SwipeRefreshLayout) root.findViewById(R.id.swiperefresh);
+        recyclerView.setNestedScrollingEnabled(false);
 
         swipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                refreshPromotion();
                 refreshRecently();
 //                if (sizeBanner < 1) {
 //                    refreshBanner();
 //                }
-            }
-        });
-
-        ApiInterface servicePromotion = ApiClient.getClient().create(ApiInterface.class);
-        Call<List<Promotion>> callPromotion = servicePromotion.getPromotion();
-        callPromotion.enqueue(new Callback<List<Promotion>>() {
-            @Override
-            public void onResponse(Call<List<Promotion>> call, Response<List<Promotion>> response) {
-                promotions = response.body();
-                sizePromotion = products.size();
-                layoutPromotion = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
-                promotionAdapter = new PromotionAdapter(getActivity(), promotions);
-                recyclerViewPromotion.setLayoutManager(layoutPromotion);
-                recyclerViewPromotion.setAdapter(promotionAdapter);
-            }
-
-            @Override
-            public void onFailure(Call<List<Promotion>> call, Throwable t) {
-
             }
         });
 
@@ -119,30 +96,6 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
 
         viewBannerGallery.flip(listData, true);
         return root;
-    }
-
-    private void refreshPromotion() {
-        final ApiInterface servicePromotion = ApiClient.getClient().create(ApiInterface.class);
-        Call<List<Promotion>> callPromotion = servicePromotion.getPromotion();
-        callPromotion.enqueue(new Callback<List<Promotion>>() {
-            @Override
-            public void onResponse(Call<List<Promotion>> call, Response<List<Promotion>> response) {
-                promotions = response.body();
-                if (sizePromotion != promotions.size()) {
-                    layoutPromotion = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
-                    promotionAdapter = new PromotionAdapter(getActivity(), promotions);
-                    recyclerViewPromotion.setLayoutManager(layoutPromotion);
-                    recyclerViewPromotion.setAdapter(promotionAdapter);
-                    sizePromotion = promotions.size();
-                }
-                swipeRefresh.setRefreshing(false);
-            }
-
-            @Override
-            public void onFailure(Call<List<Promotion>> call, Throwable t) {
-
-            }
-        });
     }
 
     private void refreshRecently() {
@@ -173,12 +126,6 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
-            case R.id.morePromotion:
-                Intent intent = new Intent(getActivity(), MoreProductActivity.class);
-                intent.putExtra("key", "promotion");
-                intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-                startActivity(intent);
-                break;
             case R.id.moreRecently:
                 Intent intentRecently = new Intent(getActivity(), MoreProductActivity.class);
                 intentRecently.putExtra("key", "recently");

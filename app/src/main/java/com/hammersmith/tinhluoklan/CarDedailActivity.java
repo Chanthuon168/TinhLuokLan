@@ -58,7 +58,8 @@ public class CarDedailActivity extends AppCompatActivity implements View.OnClick
         appBarLayout = (AppBarLayout) findViewById(R.id.app_bar_layout);
         name = getIntent().getStringExtra("name");
         id = getIntent().getIntExtra("id", 0);
-        toolbar.setTitle(name);
+        recyclerView.setNestedScrollingEnabled(false);
+
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);

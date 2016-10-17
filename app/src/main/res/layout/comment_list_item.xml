@@ -72,6 +72,7 @@
                     android:textSize="3sp" />
 
                 <TextView
+                    android:textSize="12sp"
                     android:id="@+id/txtReply"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -87,6 +88,7 @@
                 android:orientation="vertical">
 
                 <TextView
+                    android:textStyle="bold"
                     android:layout_marginTop="5dp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"

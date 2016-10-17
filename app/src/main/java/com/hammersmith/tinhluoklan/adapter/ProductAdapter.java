@@ -50,13 +50,12 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.MyViewHo
         context = holder.image.getContext();
         Picasso.with(context).load(uri).into(holder.image);
         holder.title.setText(products.get(position).getName());
-        holder.price.setText(products.get(position).getPrice());
-        holder.price.setPaintFlags(holder.price.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+        holder.price.setText("USD " + products.get(position).getPrice()+".00");
         holder.image.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(activity, CarDedailActivity.class);
-                intent.putExtra("id",products.get(position).getId());
+                intent.putExtra("id", products.get(position).getId());
                 intent.putExtra("name", products.get(position).getName());
                 intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
                 activity.startActivity(intent);
@@ -70,14 +69,14 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.MyViewHo
     }
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
-        TextView price, title;
         ImageView image;
+        TextView title, price;
 
         public MyViewHolder(View itemView) {
             super(itemView);
+            image = (ImageView) itemView.findViewById(R.id.image);
             title = (TextView) itemView.findViewById(R.id.title);
             price = (TextView) itemView.findViewById(R.id.price);
-            image = (ImageView) itemView.findViewById(R.id.image);
         }
     }
 }
