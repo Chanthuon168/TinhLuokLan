@@ -51,6 +51,9 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.MyViewHo
         Picasso.with(context).load(uri).into(holder.image);
         holder.title.setText(products.get(position).getName());
         holder.price.setText("USD " + products.get(position).getPrice()+".00");
+        holder.carType.setText(products.get(position).getType());
+        holder.transmition.setText(products.get(position).getTransmition());
+        holder.carUsing.setText(products.get(position).getCarUsing());
         holder.image.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -70,13 +73,16 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.MyViewHo
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
         ImageView image;
-        TextView title, price;
+        TextView title, price, carType, transmition, carUsing;
 
         public MyViewHolder(View itemView) {
             super(itemView);
             image = (ImageView) itemView.findViewById(R.id.image);
             title = (TextView) itemView.findViewById(R.id.title);
             price = (TextView) itemView.findViewById(R.id.price);
+            carType = (TextView) itemView.findViewById(R.id.carType);
+            transmition = (TextView) itemView.findViewById(R.id.transmition);
+            carUsing = (TextView) itemView.findViewById(R.id.carUsing);
         }
     }
 }

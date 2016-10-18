@@ -16,9 +16,7 @@ public class Product {
     private String price;
     @SerializedName("discount")
     private String discount;
-    @SerializedName("size")
-    private String size;
-    @SerializedName("type")
+    @SerializedName("car_type")
     private String type;
     @SerializedName("color")
     private String color;
@@ -44,6 +42,18 @@ public class Product {
     private String createdAt;
     @SerializedName("address")
     private String address;
+    @SerializedName("car_year")
+    private String carYear;
+    @SerializedName("transmition")
+    private String transmition;
+    @SerializedName("car_using")
+    private String carUsing;
+    @SerializedName("car_mater")
+    private String carMater;
+    @SerializedName("licence")
+    private String licence;
+    @SerializedName("seller_name")
+    private String sellerName;
 
     public Product() {
     }
@@ -86,14 +96,6 @@ public class Product {
 
     public void setDiscount(String discount) {
         this.discount = discount;
-    }
-
-    public String getSize() {
-        return size;
-    }
-
-    public void setSize(String size) {
-        this.size = size;
     }
 
     public String getType() {
@@ -198,5 +200,53 @@ public class Product {
 
     public void setAddress(String address) {
         this.address = address;
+    }
+
+    public String getCarYear() {
+        return carYear;
+    }
+
+    public void setCarYear(String carYear) {
+        this.carYear = carYear;
+    }
+
+    public String getTransmition() {
+        return transmition;
+    }
+
+    public void setTransmition(String transmition) {
+        this.transmition = transmition;
+    }
+
+    public String getCarUsing() {
+        return carUsing;
+    }
+
+    public void setCarUsing(String carUsing) {
+        this.carUsing = carUsing;
+    }
+
+    public String getCarMater() {
+        return carMater;
+    }
+
+    public void setCarMater(String carMater) {
+        this.carMater = carMater;
+    }
+
+    public String getLicence() {
+        return licence;
+    }
+
+    public void setLicence(String licence) {
+        this.licence = licence;
+    }
+
+    public String getSellerName() {
+        return sellerName;
+    }
+
+    public void setSellerName(String sellerName) {
+        this.sellerName = sellerName;
     }
 }

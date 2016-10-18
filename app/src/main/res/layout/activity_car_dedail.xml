@@ -77,35 +77,232 @@
                         android:orientation="vertical">
 
                         <LinearLayout
-                            android:layout_width="wrap_content"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:orientation="vertical"
                             android:padding="20dp">
 
                             <TextView
+                                android:id="@+id/name"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="10dp"
-                                android:text="2006 Super White Toyota Prius Hybrid"
                                 android:textColor="@color/primary_text"
                                 android:textSize="16dp"
                                 android:textStyle="bold" />
 
-                            <TextView
-                                android:layout_width="wrap_content"
+                            <LinearLayout
+                                android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:layout_marginTop="5dp"
-                                android:text="Toyota / Prius / 2005"
-                                android:textColor="@color/red"
-                                android:textSize="14sp"
-                                android:textStyle="bold" />
+                                android:layout_marginTop="10dp"
+                                android:orientation="horizontal"
+                                android:weightSum="2">
+
+                                <LinearLayout
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:orientation="vertical">
+
+                                    <LinearLayout
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:orientation="horizontal">
+
+                                        <com.joanzapata.iconify.widget.IconTextView
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:text="{fa-calendar-o}"
+                                            android:textColor="@color/colorPrimary"
+                                            android:textSize="18sp" />
+
+                                        <TextView
+                                            android:id="@+id/year"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:layout_marginLeft="10dp"
+                                            android:textColor="@color/primary_text" />
+
+                                    </LinearLayout>
+
+                                    <LinearLayout
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:layout_marginTop="5dp"
+                                        android:orientation="horizontal">
+
+                                        <com.joanzapata.iconify.widget.IconTextView
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:text="{fa-car}"
+                                            android:textColor="@color/colorPrimary"
+                                            android:textSize="18sp" />
+
+                                        <TextView
+                                            android:id="@+id/catName"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:layout_marginLeft="5dp"
+                                            android:textColor="@color/primary_text" />
+
+                                    </LinearLayout>
+
+                                    <LinearLayout
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:layout_marginTop="5dp"
+                                        android:orientation="horizontal">
+
+                                        <com.joanzapata.iconify.widget.IconTextView
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:text="{fa-tachometer}"
+                                            android:textColor="@color/colorPrimary"
+                                            android:textSize="18sp" />
+
+                                        <TextView
+                                            android:id="@+id/carType"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:layout_marginLeft="10dp"
+                                            android:textColor="@color/primary_text" />
+
+                                    </LinearLayout>
+
+                                    <LinearLayout
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:layout_marginTop="5dp"
+                                        android:orientation="horizontal">
+
+                                        <com.joanzapata.iconify.widget.IconTextView
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:text="{fa-map-pin}"
+                                            android:textColor="@color/colorPrimary"
+                                            android:textSize="18sp" />
+
+                                        <TextView
+                                            android:id="@+id/transmition"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:layout_marginLeft="15dp"
+                                            android:textColor="@color/primary_text" />
+
+                                    </LinearLayout>
+
+                                </LinearLayout>
+
+                                <LinearLayout
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:orientation="vertical">
+
+                                    <LinearLayout
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:orientation="horizontal">
+
+                                        <com.joanzapata.iconify.widget.IconTextView
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:text="{fa-beer}"
+                                            android:textColor="@color/colorPrimary"
+                                            android:textSize="18sp" />
+
+                                        <TextView
+                                            android:id="@+id/carUsing"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:layout_marginLeft="10dp"
+                                            android:textColor="@color/primary_text" />
+
+                                    </LinearLayout>
+
+                                    <LinearLayout
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:layout_marginTop="5dp"
+                                        android:orientation="horizontal">
+
+                                        <com.joanzapata.iconify.widget.IconTextView
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:text="{fa-line-chart}"
+                                            android:textColor="@color/colorPrimary"
+                                            android:textSize="18sp" />
+
+                                        <TextView
+                                            android:id="@+id/carMater"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:layout_marginLeft="5dp"
+                                            android:textColor="@color/primary_text" />
+
+                                    </LinearLayout>
+
+                                    <LinearLayout
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:layout_marginTop="5dp"
+                                        android:orientation="horizontal">
+
+                                        <com.joanzapata.iconify.widget.IconTextView
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:text="{fa-adjust}"
+                                            android:textColor="@color/colorPrimary"
+                                            android:textSize="18sp" />
+
+                                        <TextView
+                                            android:id="@+id/color"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:layout_marginLeft="10dp"
+                                            android:textColor="@color/primary_text" />
+
+                                    </LinearLayout>
+
+                                    <LinearLayout
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:layout_marginTop="5dp"
+                                        android:orientation="horizontal">
+
+                                        <com.joanzapata.iconify.widget.IconTextView
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:text="{fa-map-marker}"
+                                            android:textColor="@color/colorPrimary"
+                                            android:textSize="18sp" />
+
+                                        <TextView
+                                            android:id="@+id/address"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:layout_marginLeft="15dp"
+                                            android:textColor="@color/primary_text" />
+
+                                    </LinearLayout>
+
+                                </LinearLayout>
+
+
+                            </LinearLayout>
+
+                            <View
+                                android:layout_width="match_parent"
+                                android:layout_height="1dp"
+                                android:layout_marginTop="20dp"
+                                android:background="@color/divide" />
+
 
                             <TextView
+                                android:id="@+id/createdAt"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_marginTop="5dp"
-                                android:text="13 October 2016 14:11"
-                                android:textSize="12sp" />
+                                android:layout_marginTop="20dp" />
 
                         </LinearLayout>
 
@@ -137,18 +334,17 @@
                                         android:id="@+id/price"
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
-                                        android:text="$15.000"
-                                        android:textColor="@color/red"
-                                        android:textSize="14sp" />
-
-                                    <TextView
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:layout_marginTop="5dp"
-                                        android:text="$13.000"
                                         android:textColor="@color/red"
                                         android:textSize="18sp"
                                         android:textStyle="bold" />
+
+                                    <TextView
+                                        android:id="@+id/licence"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_marginTop="5dp"
+                                        android:textColor="@color/primary_text"
+                                        android:textSize="14sp" />
 
                                 </LinearLayout>
 
@@ -168,6 +364,7 @@
                                         card_view:cardCornerRadius="2dp">
 
                                         <LinearLayout
+                                            android:id="@+id/contactSeller"
                                             android:layout_width="match_parent"
                                             android:layout_height="wrap_content"
                                             android:background="@drawable/button_sell"
@@ -207,75 +404,34 @@
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="seller information"
+                                android:text="description"
                                 android:textAllCaps="true"
                                 android:textColor="@color/colorPrimary"
                                 android:textSize="14sp"
                                 android:textStyle="bold" />
 
-                            <LinearLayout
-                                android:layout_width="match_parent"
+                            <TextView
+                                android:id="@+id/description"
+                                android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_marginTop="10dp"
-                                android:orientation="horizontal">
-
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:fontFamily="sans-serif-medium"
-                                    android:text="Name"
-                                    android:textColor="@color/primary_text" />
-
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_marginLeft="10dp"
-                                    android:text="The Tinh Luok"
-                                    android:textColor="@color/primary_text" />
-
-                            </LinearLayout>
+                                android:layout_marginTop="10dp" />
 
                             <LinearLayout
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:layout_marginTop="10dp"
-                                android:orientation="horizontal">
+                                android:layout_marginTop="20dp"
+                                android:gravity="right">
 
                                 <TextView
+                                    android:id="@+id/report"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:fontFamily="sans-serif-medium"
-                                    android:text="Phone"
-                                    android:textColor="@color/primary_text" />
-
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_marginLeft="10dp"
-                                    android:text="0962008259/096535343"
-                                    android:textColor="@color/primary_text" />
-
-                            </LinearLayout>
-
-                            <LinearLayout
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="10dp"
-                                android:orientation="horizontal">
-
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:fontFamily="sans-serif-medium"
-                                    android:text="Email"
-                                    android:textColor="@color/primary_text" />
-
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_marginLeft="10dp"
-                                    android:text="thetinhluok2016@gmail.com"
-                                    android:textColor="@color/primary_text" />
+                                    android:background="@drawable/button_item"
+                                    android:clickable="true"
+                                    android:padding="8dp"
+                                    android:text="Report This Product"
+                                    android:textColor="@color/red"
+                                    android:textStyle="bold" />
 
                             </LinearLayout>
 
@@ -303,33 +459,75 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="description"
+                            android:text="seller Info"
                             android:textAllCaps="true"
                             android:textColor="@color/colorPrimary"
                             android:textSize="14sp"
                             android:textStyle="bold" />
 
-                        <TextView
-                            android:layout_width="wrap_content"
+                        <LinearLayout
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="10dp"
-                            android:text="មានបង់រំលោះ អត្រាការប្រាក់1.38%ក្នុង១ខែ កក់មុន40%នៃតំលៃរថយន្ត មិនទាមទារទ្រព្យបញ្ចាំ មិនមានកំរ៉ៃសេវា អតិថិជនអាចបង់ផ្តាច់ពេលណាក៏បានដោយមិនពិន័យគិតការប្រាក់ត្រឹមថ្ងៃដែលបង់ផ្តាច់ ពត៌មានលំអិតសូមទំនាក់ទំនង 0962008259 រាល់ការទិញទំនិញមិនត្រូវធ្វើការផ្ញើប្រាក់ទៅមុនជាដាច់ខាត ត្រូវជួបអ្នកលក់នៅទីតាំងដែលមានសុវត្ថិភាព និងសូមពិនិត្យមើលទំនិញមុនពេលដែលបង់ប្រាក់។" />
+                            android:orientation="horizontal">
+
+                            <com.joanzapata.iconify.widget.IconTextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="{fa-user}"
+                                android:textColor="@color/colorPrimary"
+                                android:textSize="18sp" />
+
+                            <TextView
+                                android:id="@+id/sellerName"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="10dp"
+                                android:textColor="@color/primary_text" />
+
+                        </LinearLayout>
 
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="20dp"
-                            android:gravity="right">
+                            android:layout_marginTop="10dp"
+                            android:orientation="horizontal">
 
-                            <TextView
+                            <com.joanzapata.iconify.widget.IconTextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:background="@drawable/button_item"
-                                android:clickable="true"
-                                android:padding="8dp"
-                                android:text="Report This Product"
-                                android:textColor="@color/red"
-                                android:textStyle="bold" />
+                                android:text="{fa-phone}"
+                                android:textColor="@color/colorPrimary"
+                                android:textSize="18sp" />
+
+                            <TextView
+                                android:id="@+id/phone"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="10dp"
+                                android:textColor="@color/primary_text" />
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="10dp"
+                            android:orientation="horizontal">
+
+                            <com.joanzapata.iconify.widget.IconTextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="{fa-envelope}"
+                                android:textColor="@color/colorPrimary"
+                                android:textSize="18sp" />
+
+                            <TextView
+                                android:id="@+id/email"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="10dp"
+                                android:textColor="@color/primary_text" />
 
                         </LinearLayout>
 

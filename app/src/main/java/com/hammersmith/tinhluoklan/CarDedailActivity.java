@@ -1,65 +1,94 @@
 package com.hammersmith.tinhluoklan;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.net.ParseException;
+import android.net.Uri;
 import android.os.Build;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.hammersmith.tinhluoklan.adapter.CommentAdapter;
 import com.hammersmith.tinhluoklan.model.Comment;
 import com.hammersmith.tinhluoklan.model.Image;
+import com.hammersmith.tinhluoklan.model.Product;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class CarDedailActivity extends AppCompatActivity implements View.OnClickListener{
+public class CarDedailActivity extends AppCompatActivity implements View.OnClickListener {
     private Toolbar toolbar;
+    private static String today;
     private int id;
-    private String name;
     private List<Image> images = new ArrayList<>();
     private ProgressDialog mProgressDialog;
     private CollapsingToolbarLayout collapsingToolbarLayout;
     private AppBarLayout appBarLayout;
     private FloatingActionButton fab;
-    private TextView price;
     private LinearLayoutManager layoutManager;
     private List<Comment> comments = new ArrayList<>();
     private CommentAdapter commentAdapter;
     private RecyclerView recyclerView;
+    private Product product;
+    private TextView name, year, catName, type, transmition, using, mater, color, address, price, createAt, licence, description, sellerName, phone, email;
+    private String strPhone, strEmail, strNumber, strTitle, strOwner, strDate;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_car_dedail);
+        name = (TextView) findViewById(R.id.name);
+        year = (TextView) findViewById(R.id.year);
+        catName = (TextView) findViewById(R.id.catName);
+        type = (TextView) findViewById(R.id.carType);
+        transmition = (TextView) findViewById(R.id.transmition);
+        using = (TextView) findViewById(R.id.carUsing);
+        mater = (TextView) findViewById(R.id.carMater);
+        color = (TextView) findViewById(R.id.color);
+        address = (TextView) findViewById(R.id.address);
+        createAt = (TextView) findViewById(R.id.createdAt);
+        licence = (TextView) findViewById(R.id.licence);
+        description = (TextView) findViewById(R.id.description);
         recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
         fab = (FloatingActionButton) findViewById(R.id.fab);
         price = (TextView) findViewById(R.id.price);
-        price.setPaintFlags(price.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+        sellerName = (TextView) findViewById(R.id.sellerName);
+        phone = (TextView) findViewById(R.id.phone);
+        email = (TextView) findViewById(R.id.email);
         fab.setOnClickListener(this);
+        findViewById(R.id.report).setOnClickListener(this);
+        findViewById(R.id.contactSeller).setOnClickListener(this);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar_layout_view_profile);
         appBarLayout = (AppBarLayout) findViewById(R.id.app_bar_layout);
-        name = getIntent().getStringExtra("name");
         id = getIntent().getIntExtra("id", 0);
         recyclerView.setNestedScrollingEnabled(false);
 
+        Calendar calendar = Calendar.getInstance();
+        today = String.valueOf(calendar.get(Calendar.DAY_OF_MONTH));
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -119,11 +148,52 @@ public class CarDedailActivity extends AppCompatActivity implements View.OnClick
                     listData.add(viewBannerGallery.new BannerItem(ApiClient.BASE_URL + images.get(i).getImage()));
                 }
                 viewBannerGallery.flip(listData, true);
-                hideProgressDialog();
             }
 
             @Override
             public void onFailure(Call<List<Image>> call, Throwable t) {
+
+            }
+        });
+
+        ApiInterface serviceDetail = ApiClient.getClient().create(ApiInterface.class);
+        Call<Product> callDetail = serviceDetail.getCarDetail(id);
+        callDetail.enqueue(new Callback<Product>() {
+            @Override
+            public void onResponse(Call<Product> call, Response<Product> response) {
+                product = response.body();
+                name.setText(product.getName());
+                year.setText(product.getCarYear());
+                catName.setText(product.getCatName());
+                type.setText(product.getType());
+                transmition.setText(product.getTransmition());
+                using.setText(product.getCarUsing());
+                mater.setText(product.getCarMater() + "km");
+                color.setText(product.getColor());
+                address.setText(product.getAddress());
+                price.setText("USD " + product.getPrice() + ".00");
+                createAt.setText("Added date " + getTimeStamp(product.getCreatedAt()));
+                licence.setText(product.getLicence());
+                description.setText(product.getDescription());
+                sellerName.setText(product.getSellerName());
+                strPhone = product.getPhone();
+                strEmail = product.getEmail();
+                strNumber = String.valueOf(product.getId());
+                strOwner = product.getSellerName();
+                strTitle = product.getName();
+                strDate = getTimeStamp(product.getCreatedAt());
+
+                if (product.getPhone2().equals("")) {
+                    phone.setText(strPhone);
+                } else {
+                    phone.setText(strPhone + "/" + product.getPhone2());
+                }
+                email.setText(strEmail);
+                hideProgressDialog();
+            }
+
+            @Override
+            public void onFailure(Call<Product> call, Throwable t) {
 
             }
         });
@@ -153,10 +223,83 @@ public class CarDedailActivity extends AppCompatActivity implements View.OnClick
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()){
+        switch (v.getId()) {
             case R.id.fab:
-                    fab.setImageDrawable(getResources().getDrawable(R.drawable.heart));
+                fab.setImageDrawable(getResources().getDrawable(R.drawable.heart));
+                break;
+            case R.id.contactSeller:
+                dialogContact();
+                break;
+            case R.id.report:
+                Intent emailIntent = new Intent(Intent.ACTION_SENDTO, Uri.fromParts("mailto", strEmail, null));
+                emailIntent.putExtra(Intent.EXTRA_SUBJECT, "Report The Content");
+                emailIntent.putExtra(Intent.EXTRA_TEXT, "Dear Team TinhLuokLan\n\n\tI want to report the centent\n\n\tNumber " + strNumber + "\n\n\tTitle " + strTitle + "\n\n\tAdded by " + strOwner + "\n\n\tAdded date " + strDate + "\n\nThe reason ");
+                startActivity(Intent.createChooser(emailIntent, "Send email..."));
                 break;
         }
+    }
+
+    public static String getTimeStamp(String dateStr) {
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        String timestamp = "";
+
+        today = today.length() < 2 ? "0" + today : today;
+
+        try {
+            Date date = format.parse(dateStr);
+            SimpleDateFormat todayFormat = new SimpleDateFormat("dd");
+            String dateToday = todayFormat.format(date);
+            format = dateToday.equals(today) ? new SimpleDateFormat("hh:mm a") : new SimpleDateFormat("yyyy/dd/LLLL, hh:mm a");
+            String date1 = format.format(date);
+            timestamp = date1.toString();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        } catch (java.text.ParseException e) {
+            e.printStackTrace();
+        }
+
+        return timestamp;
+    }
+
+    private void dialogContact() {
+        LayoutInflater factory = LayoutInflater.from(this);
+        final View viewDialog = factory.inflate(R.layout.layout_dialog_contact, null);
+        final AlertDialog dialog = new AlertDialog.Builder(this).create();
+        dialog.setView(viewDialog);
+        LinearLayout activate = (LinearLayout) viewDialog.findViewById(R.id.ok);
+        LinearLayout layoutEmail = (LinearLayout) viewDialog.findViewById(R.id.l_email);
+        activate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog.dismiss();
+            }
+        });
+        viewDialog.findViewById(R.id.l_call).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(Intent.ACTION_DIAL, Uri.fromParts("tel", strPhone, null));
+                startActivity(intent);
+            }
+        });
+        viewDialog.findViewById(R.id.l_message).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(Intent.ACTION_VIEW, Uri.fromParts("sms", strPhone, null)));
+            }
+        });
+        if (strEmail.equals("")) {
+            layoutEmail.setVisibility(View.GONE);
+        } else {
+            layoutEmail.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent emailIntent = new Intent(Intent.ACTION_SENDTO, Uri.fromParts("mailto", strEmail, null));
+                    emailIntent.putExtra(Intent.EXTRA_SUBJECT, "");
+                    emailIntent.putExtra(Intent.EXTRA_TEXT, "");
+                    startActivity(Intent.createChooser(emailIntent, "Send email..."));
+                }
+            });
+        }
+        dialog.show();
     }
 }

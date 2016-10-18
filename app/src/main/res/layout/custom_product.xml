@@ -120,10 +120,10 @@
                                     android:textColor="@color/colorPrimary" />
 
                                 <TextView
+                                    android:id="@+id/carType"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_marginLeft="5dp"
-                                    android:text="Used"
                                     android:textSize="12sp" />
 
                             </LinearLayout>
@@ -140,10 +140,10 @@
                                     android:textColor="@color/colorPrimary" />
 
                                 <TextView
+                                    android:id="@+id/transmition"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_marginLeft="10dp"
-                                    android:text="Automatic"
                                     android:textSize="12sp" />
 
                             </LinearLayout>
@@ -160,10 +160,10 @@
                                     android:textColor="@color/colorPrimary" />
 
                                 <TextView
+                                    android:id="@+id/carUsing"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_marginLeft="5dp"
-                                    android:text="Petrol"
                                     android:textSize="12sp" />
 
                             </LinearLayout>
