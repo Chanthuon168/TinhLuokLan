@@ -54,6 +54,8 @@ public class Product {
     private String licence;
     @SerializedName("seller_name")
     private String sellerName;
+    @SerializedName("num_image")
+    private String numImage;
 
     public Product() {
     }
@@ -248,5 +250,13 @@ public class Product {
 
     public void setSellerName(String sellerName) {
         this.sellerName = sellerName;
+    }
+
+    public String getNumImage() {
+        return numImage;
+    }
+
+    public void setNumImage(String numImage) {
+        this.numImage = numImage;
     }
 }

@@ -4,6 +4,7 @@
     <color name="colorPrimaryDark">#004D40</color>
     <color name="primary_light">#F5F5F5</color>
     <color name="colorAccent">#009688</color>
+    <color name="endColorAccent">#04c4b2</color>
     <color name="primary_text">#212121</color>
     <color name="secondary_text">#757575</color>
     <color name="icons">#212121</color>
@@ -16,4 +17,5 @@
     <color name="red_light">#f2502b</color>
     <color name="green">#2e9c1d</color>
     <color name="blue">#244dd2</color>
+    <color name="gray">#565656</color>
 </resources>

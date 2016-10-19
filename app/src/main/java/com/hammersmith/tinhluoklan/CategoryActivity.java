@@ -41,7 +41,7 @@ public class CategoryActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_category);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
-        toolbar.setTitle("All Brands");
+        toolbar.setTitle("All Models");
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);

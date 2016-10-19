@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "17416276451",
+    "project_id": "buy-and-sell-car"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:17416276451:android:3f753c96c5971783",
+        "android_client_info": {
+          "package_name": "com.hammersmith.tinhluoklan"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "17416276451-s8kuqfcjdiaksi22qbra83g8q94tokup.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.hammersmith.tinhluoklan",
+            "certificate_hash": "9128A4CFEE443AE2158530A26165C3184E9F9F19"
+          }
+        },
+        {
+          "client_id": "17416276451-73enoa42o7fac10ueg50hbq4nvpims9e.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD-YAwH-IcgQf15uBIUSvn0SInZ5Yj-PGU"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 1
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,8 +1,8 @@
 <resources>
     <string name="app_name">Tinh Luok Lan</string>
-
+    <string name="app_id">1689609417955286</string>
+    <string name="google_key">AIzaSyD-YAwH-IcgQf15uBIUSvn0SInZ5Yj-PGU</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
-
     <string name="action_settings">Settings</string>
 </resources>
