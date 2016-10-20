@@ -22,8 +22,13 @@ import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 
+import com.hammersmith.tinhluoklan.ApiClient;
+import com.hammersmith.tinhluoklan.ApiInterface;
+import com.hammersmith.tinhluoklan.PrefUtils;
 import com.hammersmith.tinhluoklan.R;
 import com.hammersmith.tinhluoklan.model.Comment;
+import com.hammersmith.tinhluoklan.model.Reply;
+import com.hammersmith.tinhluoklan.model.User;
 import com.squareup.picasso.Picasso;
 
 import java.text.SimpleDateFormat;
@@ -45,10 +50,17 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.MyViewHo
     private Context context;
     private Activity activity;
     private static String today;
+    private PopupWindow popWindow;
+    private ReplyAdapter replyAdapter;
+    private List<Reply> replies = new ArrayList<>();
+    private Reply reply;
+    private Reply rep;
+    private User user;
 
     public CommentAdapter(Activity activity, List<Comment> comments) {
         this.activity = activity;
         this.comments = comments;
+        user = PrefUtils.getCurrentUser(activity);
         Calendar calendar = Calendar.getInstance();
         today = String.valueOf(calendar.get(Calendar.DAY_OF_MONTH));
     }
@@ -77,6 +89,246 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.MyViewHo
             holder.nameReply.setText(comments.get(position).getNameReply());
             holder.reply.setText(comments.get(position).getLastMessage());
         }
+        holder.txtReply.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                LayoutInflater layoutInflater = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                View inflatedView = layoutInflater.inflate(R.layout.popup_layout_reply, null, false);
+                LinearLayout headerView = (LinearLayout) inflatedView.findViewById(R.id.headerLayout);
+                final RecyclerView recyclerViewComment = (RecyclerView) inflatedView.findViewById(R.id.commentsListView);
+                final EditText writeComment = (EditText) inflatedView.findViewById(R.id.writeComment);
+                final ImageView iconSend = (ImageView) inflatedView.findViewById(R.id.iconSend);
+                final LinearLayout lNoComment = (LinearLayout) inflatedView.findViewById(R.id.lNoComment);
+                final LinearLayout lDialog = (LinearLayout) inflatedView.findViewById(R.id.lDialog);
+                Display display = activity.getWindowManager().getDefaultDisplay();
+                final Point size = new Point();
+                display.getSize(size);
+                DisplayMetrics displayMetrics = activity.getResources().getDisplayMetrics();
+                int width = displayMetrics.widthPixels;
+                int height = displayMetrics.heightPixels;
+                LinearLayoutManager layoutManager = new LinearLayoutManager(activity);
+                recyclerViewComment.setLayoutManager(layoutManager);
+
+                ApiInterface serviceReply = ApiClient.getClient().create(ApiInterface.class);
+                final Call<List<Reply>> callReply = serviceReply.getReply(comments.get(position).getId());
+                callReply.enqueue(new Callback<List<Reply>>() {
+                    @Override
+                    public void onResponse(Call<List<Reply>> call, Response<List<Reply>> response) {
+                        replies = response.body();
+                        lDialog.setVisibility(View.GONE);
+                        if (replies.size() < 1) {
+                            lNoComment.setVisibility(View.VISIBLE);
+                        } else {
+                            lNoComment.setVisibility(View.GONE);
+                            replyAdapter = new ReplyAdapter(activity, replies);
+                            recyclerViewComment.setAdapter(replyAdapter);
+                            replyAdapter.notifyDataSetChanged();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<List<Reply>> call, Throwable t) {
+
+                    }
+                });
+                popWindow = new PopupWindow(inflatedView, width, height - 50, true);
+                popWindow.setBackgroundDrawable(activity.getResources().getDrawable(R.drawable.popup_bg));
+                popWindow.setInputMethodMode(PopupWindow.INPUT_METHOD_NEEDED);
+                popWindow.setHeight(WindowManager.LayoutParams.WRAP_CONTENT);
+                popWindow.setAnimationStyle(R.style.PopupAnimationReply);
+                popWindow.showAtLocation(inflatedView, Gravity.BOTTOM, 0, 100);
+
+                iconSend.setEnabled(false);
+                writeComment.addTextChangedListener(new TextWatcher() {
+                    @Override
+                    public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+                    }
+
+                    @Override
+                    public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                        if (charSequence.toString().trim().length() == 0) {
+                            iconSend.setEnabled(false);
+                            iconSend.setImageResource(R.drawable.ic_content_unsend);
+                        } else {
+                            iconSend.setEnabled(true);
+                            iconSend.setImageResource(R.drawable.ic_content_send);
+                        }
+                    }
+
+                    @Override
+                    public void afterTextChanged(Editable editable) {
+
+                    }
+                });
+
+                iconSend.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                        String currentDateTime = dateFormat.format(new Date());
+                        reply = new Reply(comments.get(position).getId(), user.getSocialLink(), writeComment.getText().toString(), currentDateTime);
+                        ApiInterface serviceCreateReply = ApiClient.getClient().create(ApiInterface.class);
+                        Call<Reply> callCreate = serviceCreateReply.createReply(reply);
+                        callCreate.enqueue(new Callback<Reply>() {
+                            @Override
+                            public void onResponse(Call<Reply> call, Response<Reply> response) {
+                                ApiInterface serviceReply = ApiClient.getClient().create(ApiInterface.class);
+                                final Call<List<Reply>> callReply = serviceReply.getReply(comments.get(position).getId());
+                                callReply.enqueue(new Callback<List<Reply>>() {
+                                    @Override
+                                    public void onResponse(Call<List<Reply>> call, Response<List<Reply>> response) {
+                                        replies = response.body();
+                                        lDialog.setVisibility(View.GONE);
+                                        if (replies.size() < 1) {
+                                            lNoComment.setVisibility(View.VISIBLE);
+                                        } else {
+                                            lNoComment.setVisibility(View.GONE);
+                                            replyAdapter = new ReplyAdapter(activity, replies);
+                                            recyclerViewComment.setAdapter(replyAdapter);
+                                            replyAdapter.notifyDataSetChanged();
+                                        }
+                                    }
+
+                                    @Override
+                                    public void onFailure(Call<List<Reply>> call, Throwable t) {
+
+                                    }
+                                });
+                            }
+
+                            @Override
+                            public void onFailure(Call<Reply> call, Throwable t) {
+
+                            }
+                        });
+
+                        writeComment.setText("");
+                    }
+                });
+            }
+        });
+
+        holder.lReply.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                LayoutInflater layoutInflater = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                View inflatedView = layoutInflater.inflate(R.layout.popup_layout_reply, null, false);
+                LinearLayout headerView = (LinearLayout) inflatedView.findViewById(R.id.headerLayout);
+                final RecyclerView recyclerViewComment = (RecyclerView) inflatedView.findViewById(R.id.commentsListView);
+                final EditText writeComment = (EditText) inflatedView.findViewById(R.id.writeComment);
+                final ImageView iconSend = (ImageView) inflatedView.findViewById(R.id.iconSend);
+                final LinearLayout lNoComment = (LinearLayout) inflatedView.findViewById(R.id.lNoComment);
+                final LinearLayout lDialog = (LinearLayout) inflatedView.findViewById(R.id.lDialog);
+                Display display = activity.getWindowManager().getDefaultDisplay();
+                final Point size = new Point();
+                display.getSize(size);
+                DisplayMetrics displayMetrics = activity.getResources().getDisplayMetrics();
+                int width = displayMetrics.widthPixels;
+                int height = displayMetrics.heightPixels;
+                LinearLayoutManager layoutManager = new LinearLayoutManager(activity);
+                recyclerViewComment.setLayoutManager(layoutManager);
+
+                ApiInterface serviceReply = ApiClient.getClient().create(ApiInterface.class);
+                final Call<List<Reply>> callReply = serviceReply.getReply(comments.get(position).getId());
+                callReply.enqueue(new Callback<List<Reply>>() {
+                    @Override
+                    public void onResponse(Call<List<Reply>> call, Response<List<Reply>> response) {
+                        replies = response.body();
+                        lDialog.setVisibility(View.GONE);
+                        if (replies.size() < 1) {
+                            lNoComment.setVisibility(View.VISIBLE);
+                        } else {
+                            lNoComment.setVisibility(View.GONE);
+                            replyAdapter = new ReplyAdapter(activity, replies);
+                            recyclerViewComment.setAdapter(replyAdapter);
+                            replyAdapter.notifyDataSetChanged();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<List<Reply>> call, Throwable t) {
+
+                    }
+                });
+                popWindow = new PopupWindow(inflatedView, width, height - 50, true);
+                popWindow.setBackgroundDrawable(activity.getResources().getDrawable(R.drawable.popup_bg));
+                popWindow.setInputMethodMode(PopupWindow.INPUT_METHOD_NEEDED);
+                popWindow.setHeight(WindowManager.LayoutParams.WRAP_CONTENT);
+                popWindow.setAnimationStyle(R.style.PopupAnimationReply);
+                popWindow.showAtLocation(inflatedView, Gravity.BOTTOM, 0, 100);
+
+                iconSend.setEnabled(false);
+                writeComment.addTextChangedListener(new TextWatcher() {
+                    @Override
+                    public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+                    }
+
+                    @Override
+                    public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                        if (charSequence.toString().trim().length() == 0) {
+                            iconSend.setEnabled(false);
+                            iconSend.setImageResource(R.drawable.ic_content_unsend);
+                        } else {
+                            iconSend.setEnabled(true);
+                            iconSend.setImageResource(R.drawable.ic_content_send);
+                        }
+                    }
+
+                    @Override
+                    public void afterTextChanged(Editable editable) {
+
+                    }
+                });
+
+                iconSend.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                        String currentDateTime = dateFormat.format(new Date());
+                        reply = new Reply(comments.get(position).getId(), user.getSocialLink(), writeComment.getText().toString(), currentDateTime);
+                        ApiInterface serviceCreateReply = ApiClient.getClient().create(ApiInterface.class);
+                        Call<Reply> callCreate = serviceCreateReply.createReply(reply);
+                        callCreate.enqueue(new Callback<Reply>() {
+                            @Override
+                            public void onResponse(Call<Reply> call, Response<Reply> response) {
+                                ApiInterface serviceReply = ApiClient.getClient().create(ApiInterface.class);
+                                final Call<List<Reply>> callReply = serviceReply.getReply(comments.get(position).getId());
+                                callReply.enqueue(new Callback<List<Reply>>() {
+                                    @Override
+                                    public void onResponse(Call<List<Reply>> call, Response<List<Reply>> response) {
+                                        replies = response.body();
+                                        lDialog.setVisibility(View.GONE);
+                                        if (replies.size() < 1) {
+                                            lNoComment.setVisibility(View.VISIBLE);
+                                        } else {
+                                            lNoComment.setVisibility(View.GONE);
+                                            replyAdapter = new ReplyAdapter(activity, replies);
+                                            recyclerViewComment.setAdapter(replyAdapter);
+                                            replyAdapter.notifyDataSetChanged();
+                                        }
+                                    }
+
+                                    @Override
+                                    public void onFailure(Call<List<Reply>> call, Throwable t) {
+
+                                    }
+                                });
+                            }
+
+                            @Override
+                            public void onFailure(Call<Reply> call, Throwable t) {
+
+                            }
+                        });
+
+                        writeComment.setText("");
+                    }
+                });
+            }
+        });
+
     }
 
     @Override
@@ -102,6 +354,7 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.MyViewHo
             txtReply = (TextView) itemView.findViewById(R.id.txtReply);
         }
     }
+
     public static String getTimeStamp(String dateStr) {
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         String timestamp = "";

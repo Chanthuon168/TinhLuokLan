@@ -68,7 +68,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:layout_margin="@dimen/card_margin"
-                    android:elevation="5dp"
+                    android:elevation="3dp"
                     card_view:cardCornerRadius="@dimen/card_album_radius">
 
                     <LinearLayout
@@ -360,8 +360,8 @@
                                         android:layout_width="match_parent"
                                         android:layout_height="wrap_content"
                                         android:layout_gravity="center"
-                                        android:elevation="5dp"
-                                        card_view:cardCornerRadius="2dp">
+                                        android:elevation="2dp"
+                                        card_view:cardCornerRadius="0dp">
 
                                         <LinearLayout
                                             android:id="@+id/contactSeller"
@@ -447,7 +447,7 @@
                     android:layout_gravity="center"
                     android:layout_margin="@dimen/card_margin"
                     android:layout_marginTop="10dp"
-                    android:elevation="5dp"
+                    android:elevation="0dp"
                     card_view:cardCornerRadius="@dimen/card_album_radius">
 
                     <LinearLayout
@@ -540,7 +540,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:layout_margin="@dimen/card_margin"
-                    android:elevation="5dp"
+                    android:elevation="0dp"
                     card_view:cardCornerRadius="@dimen/card_album_radius">
 
                     <LinearLayout
@@ -552,24 +552,92 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:fontFamily="sans-serif-medium"
-                            android:padding="20dp"
-                            android:text="Comments 20"
+                            android:paddingRight="20dp"
+                            android:paddingLeft="20dp"
+                            android:paddingTop="20dp"
+                            android:text="Comments"
                             android:textColor="@color/primary_text"
                             android:textSize="16sp" />
 
-                        <View
-                            android:layout_width="match_parent"
-                            android:layout_height="1dp"
-                            android:background="@color/divide" />
-
-
                         <android.support.v7.widget.RecyclerView
+                            android:layout_marginTop="20dp"
                             android:id="@+id/recyclerView"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
                         </android.support.v7.widget.RecyclerView>
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:background="@color/divide" />
+
+                        <LinearLayout
+                            android:paddingLeft="5dp"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="10dp"
+                            android:orientation="horizontal">
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginBottom="5dp"
+                                android:gravity="center_vertical"
+                                android:minHeight="50dp"
+                                android:orientation="horizontal"
+                                android:weightSum="10">
+
+                                <LinearLayout
+                                    android:layout_width="0dp"
+                                    android:layout_height="match_parent"
+                                    android:layout_weight="1.3">
+
+                                    <com.hammersmith.tinhluoklan.RoundedImageView
+                                        android:id="@+id/profile"
+                                        android:layout_width="40dp"
+                                        android:layout_height="40dp"
+                                        android:layout_gravity="center_horizontal"
+                                        android:scaleType="centerCrop"
+                                        android:src="@drawable/lamborghini_logo"
+                                        app:border_width="0dip"
+                                        app:is_oval="true"
+                                        app:round_background="true" />
+
+                                </LinearLayout>
+
+                                <EditText
+                                    android:id="@+id/writeComment"
+                                    android:layout_width="0dp"
+                                    android:layout_height="match_parent"
+                                    android:layout_marginLeft="5dp"
+                                    android:layout_weight="7.7"
+                                    android:background="#00000000"
+                                    android:focusable="true"
+                                    android:hint="Write a Comment"
+                                    android:imeOptions="flagNoFullscreen"
+                                    android:maxLines="2"
+                                    android:textColor="@color/primary_text"
+                                    android:textSize="15sp" />
+
+                                <LinearLayout
+                                    android:layout_width="0dp"
+                                    android:layout_height="match_parent"
+                                    android:layout_weight="1">
+
+                                    <ImageView
+                                        android:id="@+id/iconSend"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="match_parent"
+                                        android:gravity="center_vertical|end"
+                                        android:src="@drawable/ic_content_unsend" />
+
+                                </LinearLayout>
+
+                            </LinearLayout>
+
+                        </LinearLayout>
 
                     </LinearLayout>
 

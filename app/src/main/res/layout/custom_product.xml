@@ -208,17 +208,18 @@
                     android:weightSum="3">
 
                     <LinearLayout
+                        android:id="@+id/lLove"
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
                         android:background="?attr/selectableItemBackground"
                         android:clickable="true"
-                        android:gravity="center_vertical"
+                        android:gravity="center"
                         android:orientation="horizontal"
                         android:padding="10dp">
 
                         <ImageView
-                            android:id="@+id/love"
+                            android:id="@+id/iconLove"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:src="@drawable/heart_outline" />
@@ -228,12 +229,12 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="5dp"
-                            android:text="11"
                             android:textColor="@color/colorAccent"
                             android:textStyle="bold" />
                     </LinearLayout>
 
                     <LinearLayout
+                        android:id="@+id/lContact"
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
@@ -262,7 +263,7 @@
                             android:layout_weight="1"
                             android:background="?attr/selectableItemBackground"
                             android:clickable="true"
-                            android:gravity="center_vertical|end"
+                            android:gravity="center"
                             android:orientation="horizontal"
                             android:padding="10dp">
 
@@ -277,7 +278,6 @@
                                 android:id="@+id/txtNumComment"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="22"
                                 android:textColor="@color/colorAccent"
                                 android:textStyle="bold" />
 

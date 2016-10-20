@@ -172,7 +172,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         } else if (id == R.id.nav_my_product) {
 
         } else if (id == R.id.nav_favorite) {
-
+            Intent intent = new Intent(MainActivity.this, FavoriteActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+            startActivity(intent);
 
         } else if (id == R.id.nav_logout) {
             FacebookSdk.sdkInitialize(getApplicationContext());

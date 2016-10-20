@@ -37,7 +37,7 @@
                 android:layout_height="wrap_content"
                 android:gravity="center_vertical"
                 android:text="Chanthuon"
-                android:textColor="@color/colorPrimaryDark"
+                android:textColor="@color/primary_text"
                 android:textStyle="bold" />
 
             <TextView
@@ -54,11 +54,11 @@
                 android:orientation="horizontal">
 
                 <TextView
+                    android:layout_marginTop="5dp"
                     android:id="@+id/createdAt"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Yesterday at 12:00 PM"
-                    android:textColor="@color/divider"
                     android:textSize="12sp" />
 
             </LinearLayout>

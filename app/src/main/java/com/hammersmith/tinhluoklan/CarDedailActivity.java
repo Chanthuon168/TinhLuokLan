@@ -1,6 +1,7 @@
 package com.hammersmith.tinhluoklan;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -16,18 +17,25 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.hammersmith.tinhluoklan.adapter.CommentAdapter;
 import com.hammersmith.tinhluoklan.model.Comment;
+import com.hammersmith.tinhluoklan.model.Favorite;
 import com.hammersmith.tinhluoklan.model.Image;
 import com.hammersmith.tinhluoklan.model.Product;
+import com.hammersmith.tinhluoklan.model.User;
+import com.squareup.picasso.Picasso;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -55,11 +63,23 @@ public class CarDedailActivity extends AppCompatActivity implements View.OnClick
     private Product product;
     private TextView name, year, catName, type, transmition, using, mater, color, address, price, createAt, licence, description, sellerName, phone, email;
     private String strPhone, strEmail, strNumber, strTitle, strOwner, strDate;
+    private RoundedImageView profile;
+    private User user;
+    private Context context;
+    private ImageView iconSend;
+    private EditText writeComment;
+    private Comment comment;
+    private Comment comm;
+    private Favorite favorite;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_car_dedail);
+        iconSend = (ImageView) findViewById(R.id.iconSend);
+        writeComment = (EditText) findViewById(R.id.writeComment);
+        user = PrefUtils.getCurrentUser(CarDedailActivity.this);
+        profile = (RoundedImageView) findViewById(R.id.profile);
         name = (TextView) findViewById(R.id.name);
         year = (TextView) findViewById(R.id.year);
         catName = (TextView) findViewById(R.id.catName);
@@ -85,7 +105,30 @@ public class CarDedailActivity extends AppCompatActivity implements View.OnClick
         collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar_layout_view_profile);
         appBarLayout = (AppBarLayout) findViewById(R.id.app_bar_layout);
         id = getIntent().getIntExtra("id", 0);
+        layoutManager = new LinearLayoutManager(this);
         recyclerView.setNestedScrollingEnabled(false);
+        final Uri uri = Uri.parse(user.getPhoto());
+        context = profile.getContext();
+        Picasso.with(context).load(uri).into(profile);
+
+        ApiInterface serviceFavoriteStatus = ApiClient.getClient().create(ApiInterface.class);
+        Call<Favorite> callStatusFavorite = serviceFavoriteStatus.getFavoriteStatus(id, user.getSocialLink());
+        callStatusFavorite.enqueue(new Callback<Favorite>() {
+            @Override
+            public void onResponse(Call<Favorite> call, Response<Favorite> response) {
+                favorite = response.body();
+                if (favorite.getMsg().equals("Added to favorite")){
+                    fab.setImageDrawable(getResources().getDrawable(R.drawable.heart));
+                }else{
+                    fab.setImageDrawable(getResources().getDrawable(R.drawable.heart_outline));
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Favorite> call, Throwable t) {
+
+            }
+        });
 
         Calendar calendar = Calendar.getInstance();
         today = String.valueOf(calendar.get(Calendar.DAY_OF_MONTH));
@@ -129,11 +172,6 @@ public class CarDedailActivity extends AppCompatActivity implements View.OnClick
                 }
             }
         });
-
-        layoutManager = new LinearLayoutManager(this);
-        commentAdapter = new CommentAdapter(this, comments);
-        recyclerView.setLayoutManager(layoutManager);
-        recyclerView.setAdapter(commentAdapter);
 
         ApiInterface serviceImage = ApiClient.getClient().create(ApiInterface.class);
         Call<List<Image>> callImage = serviceImage.getImage(id);
@@ -197,6 +235,119 @@ public class CarDedailActivity extends AppCompatActivity implements View.OnClick
 
             }
         });
+
+        ApiInterface serviceComment = ApiClient.getClient().create(ApiInterface.class);
+        final Call<List<Comment>> callComment = serviceComment.getComment(id);
+        callComment.enqueue(new Callback<List<Comment>>() {
+            @Override
+            public void onResponse(Call<List<Comment>> call, Response<List<Comment>> response) {
+                comments = response.body();
+                commentAdapter = new CommentAdapter(CarDedailActivity.this, comments);
+                recyclerView.setLayoutManager(layoutManager);
+                recyclerView.setAdapter(commentAdapter);
+                commentAdapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onFailure(Call<List<Comment>> call, Throwable t) {
+
+            }
+        });
+
+        iconSend.setEnabled(false);
+        writeComment.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                if (charSequence.toString().trim().length() == 0) {
+                    iconSend.setEnabled(false);
+                    iconSend.setImageResource(R.drawable.ic_content_unsend);
+                } else {
+                    iconSend.setEnabled(true);
+                    iconSend.setImageResource(R.drawable.ic_content_send);
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
+
+        iconSend.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (comments.size() < 1) {
+                    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                    String currentDateTime = dateFormat.format(new Date());
+                    comment = new Comment(id, user.getSocialLink(), writeComment.getText().toString(), currentDateTime);
+                    ApiInterface serviceCreateComment = ApiClient.getClient().create(ApiInterface.class);
+                    Call<Comment> callCreate = serviceCreateComment.createComment(comment);
+                    callCreate.enqueue(new Callback<Comment>() {
+                        @Override
+                        public void onResponse(Call<Comment> call, Response<Comment> response) {
+
+                            ApiInterface serviceComment = ApiClient.getClient().create(ApiInterface.class);
+                            final Call<List<Comment>> callComment = serviceComment.getComment(id);
+                            callComment.enqueue(new Callback<List<Comment>>() {
+                                @Override
+                                public void onResponse(Call<List<Comment>> call, Response<List<Comment>> response) {
+                                    comments = response.body();
+                                    commentAdapter = new CommentAdapter(CarDedailActivity.this, comments);
+                                    recyclerView.setLayoutManager(layoutManager);
+                                    recyclerView.setAdapter(commentAdapter);
+                                    commentAdapter.notifyDataSetChanged();
+                                }
+
+                                @Override
+                                public void onFailure(Call<List<Comment>> call, Throwable t) {
+
+                                }
+                            });
+                        }
+
+                        @Override
+                        public void onFailure(Call<Comment> call, Throwable t) {
+
+                        }
+                    });
+                } else {
+                    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                    String currentDateTime = dateFormat.format(new Date());
+                    comment = new Comment(id, user.getSocialLink(), writeComment.getText().toString(), currentDateTime);
+                    ApiInterface serviceCreateComment = ApiClient.getClient().create(ApiInterface.class);
+                    Call<Comment> callCreate = serviceCreateComment.createComment(comment);
+                    callCreate.enqueue(new Callback<Comment>() {
+                        @Override
+                        public void onResponse(Call<Comment> call, Response<Comment> response) {
+                            comment = response.body();
+                            comm = new Comment();
+                            comm.setComment(comment.getComment());
+                            comm.setProfile(comment.getProfile());
+                            comm.setCreateAt(comment.getCreateAt());
+                            comm.setName(comment.getName());
+                            comm.setLastMessage(comment.getLastMessage());
+                            comments.add(comm);
+                            commentAdapter.notifyDataSetChanged();
+                            if (commentAdapter.getItemCount() > 1) {
+                                recyclerView.getLayoutManager().smoothScrollToPosition(recyclerView, null, commentAdapter.getItemCount() - 1);
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Call<Comment> call, Throwable t) {
+
+                        }
+                    });
+                }
+                writeComment.setText("");
+            }
+        });
+
     }
 
     private void showProgressDialog() {
@@ -225,7 +376,7 @@ public class CarDedailActivity extends AppCompatActivity implements View.OnClick
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.fab:
-                fab.setImageDrawable(getResources().getDrawable(R.drawable.heart));
+                createFavorite();
                 break;
             case R.id.contactSeller:
                 dialogContact();
@@ -301,5 +452,28 @@ public class CarDedailActivity extends AppCompatActivity implements View.OnClick
             });
         }
         dialog.show();
+    }
+
+    private void createFavorite() {
+        favorite = new Favorite(id, user.getSocialLink());
+        ApiInterface serviceCreateFavorite = ApiClient.getClient().create(ApiInterface.class);
+        Call<Favorite> callFavorite = serviceCreateFavorite.createFavorite(favorite);
+        callFavorite.enqueue(new Callback<Favorite>() {
+            @Override
+            public void onResponse(Call<Favorite> call, Response<Favorite> response) {
+                favorite = response.body();
+                Log.d("favorite", favorite.getMsg());
+                if (favorite.getMsg().equals("Added to favorite")){
+                    fab.setImageDrawable(getResources().getDrawable(R.drawable.heart));
+                }else{
+                    fab.setImageDrawable(getResources().getDrawable(R.drawable.heart_outline));
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Favorite> call, Throwable t) {
+
+            }
+        });
     }
 }
