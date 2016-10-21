@@ -41,7 +41,7 @@ public class CategoryActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_category);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
-        toolbar.setTitle("All Models");
+        toolbar.setTitle("Car Makes");
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
@@ -52,6 +52,7 @@ public class CategoryActivity extends AppCompatActivity {
             }
         });
         recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
+        recyclerView.setNestedScrollingEnabled(false);
         layoutManager = new GridLayoutManager(this, 3);
         showProgressDialog();
         getCategory();

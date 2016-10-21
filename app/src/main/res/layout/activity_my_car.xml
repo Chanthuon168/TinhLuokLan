@@ -35,7 +35,7 @@
             <com.joanzapata.iconify.widget.IconTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="{fa-star}"
+                android:text="{fa-car}"
                 android:textColor="@color/primary_text"
                 android:textSize="45sp" />
 
@@ -43,9 +43,26 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
-                android:text="There are no favorites"
+                android:text="There are no your cars"
                 android:textColor="@color/primary_text"
                 android:textSize="16sp" />
+
+            <LinearLayout
+                android:id="@+id/lUpload"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/button_upload"
+                android:clickable="true"
+                android:padding="7dp">
+
+                <TextView
+                    android:fontFamily="sans-serif-light"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Upload the car to sell"
+                    android:textColor="@color/white" />
+            </LinearLayout>
 
 
         </LinearLayout>

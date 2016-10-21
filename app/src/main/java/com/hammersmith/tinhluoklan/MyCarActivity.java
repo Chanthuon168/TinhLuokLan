@@ -1,10 +1,10 @@
 package com.hammersmith.tinhluoklan;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -13,10 +13,10 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.hammersmith.tinhluoklan.adapter.CategoryAdapter;
 import com.hammersmith.tinhluoklan.adapter.FavoriteAdapter;
-import com.hammersmith.tinhluoklan.model.Category;
+import com.hammersmith.tinhluoklan.adapter.MyCarAdapter;
 import com.hammersmith.tinhluoklan.model.Favorite;
+import com.hammersmith.tinhluoklan.model.MyCar;
 import com.hammersmith.tinhluoklan.model.User;
 import com.joanzapata.iconify.widget.IconTextView;
 
@@ -27,11 +27,11 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class FavoriteActivity extends AppCompatActivity {
+public class MyCarActivity extends AppCompatActivity implements View.OnClickListener {
     private RecyclerView recyclerView;
-    private FavoriteAdapter favoriteAdapter;
+    private MyCarAdapter myCarAdapter;
     private LinearLayoutManager layoutManager;
-    private List<Favorite> favorites = new ArrayList<>();
+    private List<MyCar> myCars = new ArrayList<>();
     private Toolbar toolbar;
     private ProgressDialog mProgressDialog;
     private User user;
@@ -40,13 +40,14 @@ public class FavoriteActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_favorite);
-        user = PrefUtils.getCurrentUser(FavoriteActivity.this);
+        setContentView(R.layout.activity_my_car);
+        user = PrefUtils.getCurrentUser(MyCarActivity.this);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
-        toolbar.setTitle("My Favorites");
+        toolbar.setTitle("My Cars");
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
+        findViewById(R.id.lUpload).setOnClickListener(this);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -58,28 +59,39 @@ public class FavoriteActivity extends AppCompatActivity {
         lNoFavorite = (LinearLayout) findViewById(R.id.lNoFavorite);
         layoutManager = new LinearLayoutManager(this);
         showProgressDialog();
-        getFavorite();
+        getMyCar();
     }
 
-    private void getFavorite() {
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.lUpload:
+                Intent intent = new Intent(MyCarActivity.this, SellActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+                startActivity(intent);
+                break;
+        }
+    }
+
+    private void getMyCar() {
         ApiInterface serviceCategory = ApiClient.getClient().create(ApiInterface.class);
-        Call<List<Favorite>> callCategory = serviceCategory.getFavorite(user.getSocialLink());
-        callCategory.enqueue(new Callback<List<Favorite>>() {
+        Call<List<MyCar>> callCategory = serviceCategory.getMyProduct(user.getSocialLink());
+        callCategory.enqueue(new Callback<List<MyCar>>() {
             @Override
-            public void onResponse(Call<List<Favorite>> call, Response<List<Favorite>> response) {
-                favorites = response.body();
-                if (favorites.size() < 1) {
+            public void onResponse(Call<List<MyCar>> call, Response<List<MyCar>> response) {
+                myCars = response.body();
+                if (myCars.size() < 1) {
                     lNoFavorite.setVisibility(View.VISIBLE);
                 } else {
-                    favoriteAdapter = new FavoriteAdapter(FavoriteActivity.this, favorites);
+                    myCarAdapter = new MyCarAdapter(MyCarActivity.this, myCars);
                     recyclerView.setLayoutManager(layoutManager);
-                    recyclerView.setAdapter(favoriteAdapter);
+                    recyclerView.setAdapter(myCarAdapter);
                 }
                 hideProgressDialog();
             }
 
             @Override
-            public void onFailure(Call<List<Favorite>> call, Throwable t) {
+            public void onFailure(Call<List<MyCar>> call, Throwable t) {
                 hideProgressDialog();
                 dialogTryAgain("An occur while loading data");
             }
@@ -100,7 +112,7 @@ public class FavoriteActivity extends AppCompatActivity {
         viewDialog.findViewById(R.id.l_ok).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                getFavorite();
+                getMyCar();
                 dialog.dismiss();
                 showProgressDialog();
             }

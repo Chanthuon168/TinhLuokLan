@@ -27,11 +27,14 @@ import android.widget.TextView;
 import com.hammersmith.tinhluoklan.ApiClient;
 import com.hammersmith.tinhluoklan.ApiInterface;
 import com.hammersmith.tinhluoklan.CarDedailActivity;
+import com.hammersmith.tinhluoklan.CategoryActivity;
+import com.hammersmith.tinhluoklan.EditCarActivity;
 import com.hammersmith.tinhluoklan.PrefUtils;
 import com.hammersmith.tinhluoklan.R;
 import com.hammersmith.tinhluoklan.model.Comment;
 import com.hammersmith.tinhluoklan.model.Favorite;
 import com.hammersmith.tinhluoklan.model.Love;
+import com.hammersmith.tinhluoklan.model.MyCar;
 import com.hammersmith.tinhluoklan.model.User;
 import com.joanzapata.iconify.widget.IconTextView;
 import com.squareup.picasso.Picasso;
@@ -49,9 +52,8 @@ import retrofit2.Response;
 /**
  * Created by Chan Thuon on 9/12/2016.
  */
-public class FavoriteAdapter extends RecyclerView.Adapter<FavoriteAdapter.MyViewHolder> {
-    private Favorite favorite;
-    private List<Favorite> favorites;
+public class MyCarAdapter extends RecyclerView.Adapter<MyCarAdapter.MyViewHolder> {
+    private List<MyCar> myCars;
     private Context context;
     private Activity activity;
     private User user;
@@ -64,44 +66,44 @@ public class FavoriteAdapter extends RecyclerView.Adapter<FavoriteAdapter.MyView
     private CommentAdapter commentAdapter;
     private List<Comment> comments = new ArrayList<>();
 
-    public FavoriteAdapter(Activity activity, List<Favorite> favorites) {
+    public MyCarAdapter(Activity activity, List<MyCar> myCars) {
         this.activity = activity;
-        this.favorites = favorites;
+        this.myCars = myCars;
         user = PrefUtils.getCurrentUser(activity);
         Calendar calendar = Calendar.getInstance();
         today = String.valueOf(calendar.get(Calendar.DAY_OF_MONTH));
     }
 
     @Override
-    public FavoriteAdapter.MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.custom_favorite, parent, false);
+    public MyCarAdapter.MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.custom_my_car, parent, false);
         MyViewHolder myViewHolder = new MyViewHolder(view);
         return myViewHolder;
     }
 
     @Override
-    public void onBindViewHolder(final FavoriteAdapter.MyViewHolder holder, final int position) {
-        final Uri uri = Uri.parse(ApiClient.BASE_URL + favorites.get(position).getImage());
+    public void onBindViewHolder(final MyCarAdapter.MyViewHolder holder, final int position) {
+        final Uri uri = Uri.parse(ApiClient.BASE_URL + myCars.get(position).getImage());
         context = holder.imageView.getContext();
         Picasso.with(context).load(uri).into(holder.imageView);
-        holder.title.setText(favorites.get(position).getTitle());
-        holder.price.setText("USD " + favorites.get(position).getPrice() + ".00");
-        holder.createAt.setText(getTimeStamp(favorites.get(position).getCreateAt()));
-        holder.using.setText(favorites.get(position).getCarUsing());
-        holder.type.setText(favorites.get(position).getType());
-        holder.transmition.setText(favorites.get(position).getTransmition());
-        holder.mater.setText(favorites.get(position).getCarMater() + "km");
+        holder.title.setText(myCars.get(position).getTitle());
+        holder.price.setText("USD " + myCars.get(position).getPrice() + ".00");
+        holder.createAt.setText(getTimeStamp(myCars.get(position).getCreateAt()));
+        holder.using.setText(myCars.get(position).getCarUsing());
+        holder.type.setText(myCars.get(position).getType());
+        holder.transmition.setText(myCars.get(position).getTransmition());
+        holder.mater.setText(myCars.get(position).getCarMater() + "km");
         holder.lContact.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                dialogContact(favorites.get(position).getPhone(), favorites.get(position).getEmail());
+                dialogContact(myCars.get(position).getPhone(), myCars.get(position).getEmail());
             }
         });
         holder.imageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intentNew = new Intent(activity, CarDedailActivity.class);
-                intentNew.putExtra("id", favorites.get(position).getProId());
+                intentNew.putExtra("id", myCars.get(position).getId());
                 intentNew.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
                 activity.startActivity(intentNew);
             }
@@ -110,7 +112,7 @@ public class FavoriteAdapter extends RecyclerView.Adapter<FavoriteAdapter.MyView
             @Override
             public void onClick(View view) {
                 Intent intentNew = new Intent(activity, CarDedailActivity.class);
-                intentNew.putExtra("id", favorites.get(position).getProId());
+                intentNew.putExtra("id", myCars.get(position).getId());
                 intentNew.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
                 activity.startActivity(intentNew);
             }
@@ -118,25 +120,12 @@ public class FavoriteAdapter extends RecyclerView.Adapter<FavoriteAdapter.MyView
         holder.iconDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ApiInterface serviceDeleteFavorite = ApiClient.getClient().create(ApiInterface.class);
-                Call<List<Favorite>> callDelete = serviceDeleteFavorite.deleteFavorite(favorites.get(position).getProId(), user.getSocialLink());
-                callDelete.enqueue(new Callback<List<Favorite>>() {
-                    @Override
-                    public void onResponse(Call<List<Favorite>> call, Response<List<Favorite>> response) {
-                        favorites = response.body();
-                        notifyDataSetChanged();
-                    }
-
-                    @Override
-                    public void onFailure(Call<List<Favorite>> call, Throwable t) {
-
-                    }
-                });
+                dialogEdit(myCars.get(position).getId());
             }
         });
 
         ApiInterface serviceLoveStatus = ApiClient.getClient().create(ApiInterface.class);
-        Call<Love> callStatus = serviceLoveStatus.getLoveStatus(favorites.get(position).getProId(), user.getSocialLink());
+        Call<Love> callStatus = serviceLoveStatus.getLoveStatus(myCars.get(position).getId(), user.getSocialLink());
         callStatus.enqueue(new Callback<Love>() {
             @Override
             public void onResponse(Call<Love> call, Response<Love> response) {
@@ -161,7 +150,7 @@ public class FavoriteAdapter extends RecyclerView.Adapter<FavoriteAdapter.MyView
         holder.lLove.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                love = new Love(favorites.get(position).getProId(), user.getSocialLink());
+                love = new Love(myCars.get(position).getId(), user.getSocialLink());
                 ApiInterface serviceCreateLove = ApiClient.getClient().create(ApiInterface.class);
                 Call<Love> callCreate = serviceCreateLove.createLove(love);
                 callCreate.enqueue(new Callback<Love>() {
@@ -188,7 +177,7 @@ public class FavoriteAdapter extends RecyclerView.Adapter<FavoriteAdapter.MyView
             }
         });
         ApiInterface serviceCountComment = ApiClient.getClient().create(ApiInterface.class);
-        Call<Comment> callCountComment = serviceCountComment.getCountComment(favorites.get(position).getProId());
+        Call<Comment> callCountComment = serviceCountComment.getCountComment(myCars.get(position).getId());
         callCountComment.enqueue(new Callback<Comment>() {
             @Override
             public void onResponse(Call<Comment> call, Response<Comment> response) {
@@ -226,7 +215,7 @@ public class FavoriteAdapter extends RecyclerView.Adapter<FavoriteAdapter.MyView
                 recyclerViewComment.setLayoutManager(layoutManager);
 
                 ApiInterface serviceComment = ApiClient.getClient().create(ApiInterface.class);
-                final Call<List<Comment>> callComment = serviceComment.getComment(favorites.get(position).getProId());
+                final Call<List<Comment>> callComment = serviceComment.getComment(myCars.get(position).getId());
                 callComment.enqueue(new Callback<List<Comment>>() {
                     @Override
                     public void onResponse(Call<List<Comment>> call, Response<List<Comment>> response) {
@@ -283,14 +272,14 @@ public class FavoriteAdapter extends RecyclerView.Adapter<FavoriteAdapter.MyView
                         if (comments.size() < 1) {
                             SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                             String currentDateTime = dateFormat.format(new Date());
-                            comment = new Comment(favorites.get(position).getProId(), user.getSocialLink(), writeComment.getText().toString(), currentDateTime);
+                            comment = new Comment(myCars.get(position).getId(), user.getSocialLink(), writeComment.getText().toString(), currentDateTime);
                             ApiInterface serviceCreateComment = ApiClient.getClient().create(ApiInterface.class);
                             Call<Comment> callCreate = serviceCreateComment.createComment(comment);
                             callCreate.enqueue(new Callback<Comment>() {
                                 @Override
                                 public void onResponse(Call<Comment> call, Response<Comment> response) {
                                     ApiInterface serviceComment = ApiClient.getClient().create(ApiInterface.class);
-                                    final Call<List<Comment>> callComment = serviceComment.getComment(favorites.get(position).getProId());
+                                    final Call<List<Comment>> callComment = serviceComment.getComment(myCars.get(position).getId());
                                     callComment.enqueue(new Callback<List<Comment>>() {
                                         @Override
                                         public void onResponse(Call<List<Comment>> call, Response<List<Comment>> response) {
@@ -314,7 +303,7 @@ public class FavoriteAdapter extends RecyclerView.Adapter<FavoriteAdapter.MyView
                                     });
 
                                     ApiInterface serviceCountComment = ApiClient.getClient().create(ApiInterface.class);
-                                    Call<Comment> callCountComment = serviceCountComment.getCountComment(favorites.get(position).getProId());
+                                    Call<Comment> callCountComment = serviceCountComment.getCountComment(myCars.get(position).getId());
                                     callCountComment.enqueue(new Callback<Comment>() {
                                         @Override
                                         public void onResponse(Call<Comment> call, Response<Comment> response) {
@@ -341,7 +330,7 @@ public class FavoriteAdapter extends RecyclerView.Adapter<FavoriteAdapter.MyView
                         } else {
                             SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                             String currentDateTime = dateFormat.format(new Date());
-                            comment = new Comment(favorites.get(position).getProId(), user.getSocialLink(), writeComment.getText().toString(), currentDateTime);
+                            comment = new Comment(myCars.get(position).getId(), user.getSocialLink(), writeComment.getText().toString(), currentDateTime);
                             ApiInterface serviceCreateComment = ApiClient.getClient().create(ApiInterface.class);
                             Call<Comment> callCreate = serviceCreateComment.createComment(comment);
                             callCreate.enqueue(new Callback<Comment>() {
@@ -361,7 +350,7 @@ public class FavoriteAdapter extends RecyclerView.Adapter<FavoriteAdapter.MyView
                                         recyclerViewComment.getLayoutManager().smoothScrollToPosition(recyclerViewComment, null, commentAdapter.getItemCount() - 1);
                                     }
                                     ApiInterface serviceCountComment = ApiClient.getClient().create(ApiInterface.class);
-                                    Call<Comment> callCountComment = serviceCountComment.getCountComment(favorites.get(position).getProId());
+                                    Call<Comment> callCountComment = serviceCountComment.getCountComment(myCars.get(position).getId());
                                     callCountComment.enqueue(new Callback<Comment>() {
                                         @Override
                                         public void onResponse(Call<Comment> call, Response<Comment> response) {
@@ -391,6 +380,83 @@ public class FavoriteAdapter extends RecyclerView.Adapter<FavoriteAdapter.MyView
                 });
             }
         });
+    }
+
+    private void dialogEdit(final int proId) {
+        LayoutInflater factory = LayoutInflater.from(activity);
+        final View viewDialog = factory.inflate(R.layout.layout_dialog_mycar, null);
+        final AlertDialog dialog = new AlertDialog.Builder(activity).create();
+        dialog.setView(viewDialog);
+        final LinearLayout activate = (LinearLayout) viewDialog.findViewById(R.id.ok);
+        activate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog.dismiss();
+            }
+        });
+        viewDialog.findViewById(R.id.l_call).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog.dismiss();
+                Intent intent = new Intent(activity, EditCarActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+                activity.startActivity(intent);
+            }
+        });
+        viewDialog.findViewById(R.id.l_message).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog.dismiss();
+                dialogConfirm(proId);
+            }
+        });
+
+        dialog.show();
+    }
+
+    private void dialogConfirm(final int proID) {
+        LayoutInflater factory = LayoutInflater.from(activity);
+        final View viewDialog = factory.inflate(R.layout.layout_dialog, null);
+        final AlertDialog dialog = new AlertDialog.Builder(activity).create();
+        dialog.setView(viewDialog);
+        IconTextView icon = (IconTextView) viewDialog.findViewById(R.id.icon);
+        icon.setText("{fa-trash-o}");
+        TextView message = (TextView) viewDialog.findViewById(R.id.message);
+        message.setText("Are you sure want to delete this car from Buy and Sell Car?");
+        TextView cancel = (TextView) viewDialog.findViewById(R.id.cancel);
+        final TextView delete = (TextView) viewDialog.findViewById(R.id.ok);
+        delete.setText("Delete");
+        delete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+                ApiInterface serviceDeleteMyFavorite = ApiClient.getClient().create(ApiInterface.class);
+                Call<List<MyCar>> callDelete = serviceDeleteMyFavorite.deleteMyProduct(proID, user.getSocialLink());
+                callDelete.enqueue(new Callback<List<MyCar>>() {
+                    @Override
+                    public void onResponse(Call<List<MyCar>> call, Response<List<MyCar>> response) {
+                        myCars = response.body();
+                        notifyDataSetChanged();
+                        dialog.dismiss();
+                    }
+
+                    @Override
+                    public void onFailure(Call<List<MyCar>> call, Throwable t) {
+
+                    }
+                });
+            }
+        });
+        cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+        dialog.show();
+    }
+
+    private void deleteCar() {
 
     }
 
@@ -438,7 +504,7 @@ public class FavoriteAdapter extends RecyclerView.Adapter<FavoriteAdapter.MyView
 
     @Override
     public int getItemCount() {
-        return favorites.size();
+        return myCars.size();
     }
 
     public class MyViewHolder extends RecyclerView.ViewHolder {

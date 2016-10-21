@@ -11,6 +11,7 @@ import android.os.Build;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -71,6 +72,7 @@ public class CarDedailActivity extends AppCompatActivity implements View.OnClick
     private Comment comment;
     private Comment comm;
     private Favorite favorite;
+    private View view;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -117,10 +119,10 @@ public class CarDedailActivity extends AppCompatActivity implements View.OnClick
             @Override
             public void onResponse(Call<Favorite> call, Response<Favorite> response) {
                 favorite = response.body();
-                if (favorite.getMsg().equals("Added to favorite")){
-                    fab.setImageDrawable(getResources().getDrawable(R.drawable.heart));
-                }else{
-                    fab.setImageDrawable(getResources().getDrawable(R.drawable.heart_outline));
+                if (favorite.getMsg().equals("Added to favorite")) {
+                    fab.setImageDrawable(getResources().getDrawable(R.drawable.star));
+                } else {
+                    fab.setImageDrawable(getResources().getDrawable(R.drawable.star_outline));
                 }
             }
 
@@ -376,7 +378,7 @@ public class CarDedailActivity extends AppCompatActivity implements View.OnClick
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.fab:
-                createFavorite();
+                createFavorite(v);
                 break;
             case R.id.contactSeller:
                 dialogContact();
@@ -454,7 +456,7 @@ public class CarDedailActivity extends AppCompatActivity implements View.OnClick
         dialog.show();
     }
 
-    private void createFavorite() {
+    private void createFavorite(final View v) {
         favorite = new Favorite(id, user.getSocialLink());
         ApiInterface serviceCreateFavorite = ApiClient.getClient().create(ApiInterface.class);
         Call<Favorite> callFavorite = serviceCreateFavorite.createFavorite(favorite);
@@ -463,10 +465,12 @@ public class CarDedailActivity extends AppCompatActivity implements View.OnClick
             public void onResponse(Call<Favorite> call, Response<Favorite> response) {
                 favorite = response.body();
                 Log.d("favorite", favorite.getMsg());
-                if (favorite.getMsg().equals("Added to favorite")){
-                    fab.setImageDrawable(getResources().getDrawable(R.drawable.heart));
-                }else{
-                    fab.setImageDrawable(getResources().getDrawable(R.drawable.heart_outline));
+                if (favorite.getMsg().equals("Added to favorite")) {
+                    fab.setImageDrawable(getResources().getDrawable(R.drawable.star));
+                    Snackbar snackbar = Snackbar.make(v, "Car added to favorite", Snackbar.LENGTH_LONG);
+                    snackbar.show();
+                } else {
+                    fab.setImageDrawable(getResources().getDrawable(R.drawable.star_outline));
                 }
             }
 

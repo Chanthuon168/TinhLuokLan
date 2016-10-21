@@ -97,9 +97,9 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.MyViewHo
             }
         });
 
-        ApiInterface serviceCountLove = ApiClient.getClient().create(ApiInterface.class);
-        Call<Love> callCount = serviceCountLove.getCountLove(products.get(position).getId());
-        callCount.enqueue(new Callback<Love>() {
+        ApiInterface serviceLoveStatus = ApiClient.getClient().create(ApiInterface.class);
+        Call<Love> callStatus = serviceLoveStatus.getLoveStatus(products.get(position).getId(), user.getSocialLink());
+        callStatus.enqueue(new Callback<Love>() {
             @Override
             public void onResponse(Call<Love> call, Response<Love> response) {
                 love = response.body();
@@ -107,26 +107,12 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.MyViewHo
                 if (numLove.equals("no_love")) {
                     numLove = "";
                 }
-                holder.txtNumLove.setText(numLove);
-            }
-
-            @Override
-            public void onFailure(Call<Love> call, Throwable t) {
-
-            }
-        });
-
-        ApiInterface serviceLoveStatus = ApiClient.getClient().create(ApiInterface.class);
-        Call<Love> callStatus = serviceLoveStatus.getLoveStatus(products.get(position).getId(), user.getSocialLink());
-        callStatus.enqueue(new Callback<Love>() {
-            @Override
-            public void onResponse(Call<Love> call, Response<Love> response) {
-                love = response.body();
                 if (love.getStatus().equals("checked")) {
                     holder.iconLove.setImageResource(R.drawable.heart);
                 } else {
                     holder.iconLove.setImageResource(R.drawable.heart_outline);
                 }
+                holder.txtNumLove.setText(numLove);
             }
 
             @Override

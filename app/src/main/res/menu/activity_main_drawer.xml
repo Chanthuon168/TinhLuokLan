@@ -7,7 +7,7 @@
             android:title="Home" />
         <item
             android:id="@+id/nav_products"
-            android:title="Car Brand" />
+            android:title="Car Makes" />
         <item
             android:id="@+id/nav_sell"
             android:title="Sell Car" />

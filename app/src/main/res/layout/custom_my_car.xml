@@ -73,9 +73,9 @@
                                 android:id="@+id/iconDelete"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="{fa-times-circle-o}"
+                                android:text="{fa-pencil-square-o}"
                                 android:textColor="@color/secondary_text"
-                                android:textSize="20sp"  />
+                                android:textSize="20sp" />
                         </LinearLayout>
 
                     </LinearLayout>
