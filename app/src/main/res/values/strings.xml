@@ -5,4 +5,6 @@
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="action_settings">Settings</string>
+    <string name="read_more"><u>Read more</u>.</string>
+    <string name="spinner_title">Select Category</string>
 </resources>

@@ -218,7 +218,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         activate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                finish();
+                finishAffinity();
             }
         });
         viewDialog.findViewById(R.id.cancel).setOnClickListener(new View.OnClickListener() {
