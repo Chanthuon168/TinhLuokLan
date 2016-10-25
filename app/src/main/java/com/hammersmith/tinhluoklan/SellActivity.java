@@ -59,6 +59,7 @@ public class SellActivity extends AppCompatActivity implements CarMakeAdapter.Cl
     private ArrayList<String> imageList = new ArrayList<>();
     private EditText transmission, condition, using, licence;
     private String strTransmission, strCondition, strUsing, strLicence;
+    private ProgressDialog mProgressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -102,6 +103,7 @@ public class SellActivity extends AppCompatActivity implements CarMakeAdapter.Cl
         recyclerViewPhoto.setLayoutManager(layoutManagerPhoto);
         recyclerViewPhoto.setAdapter(photoAdapter);
         layoutManager = new LinearLayoutManager(this);
+        showProgressDialog();
         ApiInterface serviceCategory = ApiClient.getClient().create(ApiInterface.class);
         Call<List<Category>> callCategory = serviceCategory.getCategory();
         callCategory.enqueue(new Callback<List<Category>>() {
@@ -112,10 +114,12 @@ public class SellActivity extends AppCompatActivity implements CarMakeAdapter.Cl
                 recyclerView.setLayoutManager(layoutManager);
                 recyclerView.setAdapter(adapter);
                 adapter.setClickListener(SellActivity.this);
+                hideProgressDialog();
             }
 
             @Override
             public void onFailure(Call<List<Category>> call, Throwable t) {
+                hideProgressDialog();
             }
         });
 
@@ -266,125 +270,138 @@ public class SellActivity extends AppCompatActivity implements CarMakeAdapter.Cl
     public void onFocusChange(View v, boolean hasFocus) {
         switch (v.getId()) {
             case R.id.transmission:
-                if (hasFocus) {
-                    AlertDialog.Builder builder = new AlertDialog.Builder(this);
-                    final CharSequence[] array = {"Manual", "Automatic"};
-                    builder.setTitle("Transmission")
-                            .setSingleChoiceItems(array, 2, new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int position) {
-                                    strTransmission = (String) array[position];
-                                }
-                            })
+                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                final CharSequence[] array = {"Manual", "Automatic"};
+                builder.setTitle("Transmission")
+                        .setSingleChoiceItems(array, 2, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int position) {
+                                strTransmission = (String) array[position];
+                            }
+                        })
 
-                            .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int id) {
-                                    transmission.setText(strTransmission);
-                                    transmission.clearFocus();
-                                }
-                            })
-                            .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int id) {
-                                    dialog.cancel();
-                                    transmission.clearFocus();
-                                }
-                            });
+                        .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int id) {
+                                transmission.setText(strTransmission);
+                                transmission.clearFocus();
+                            }
+                        })
+                        .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int id) {
+                                dialog.cancel();
+                                transmission.clearFocus();
+                            }
+                        });
 
-                    builder.show();
-                }
+                builder.show();
                 break;
             case R.id.condition:
-                if (hasFocus) {
-                    AlertDialog.Builder builder = new AlertDialog.Builder(this);
-                    final CharSequence[] array = {"New", "Used"};
-                    builder.setTitle("Condition")
-                            .setSingleChoiceItems(array, 2, new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int position) {
-                                    strCondition = (String) array[position];
-                                }
-                            })
+                AlertDialog.Builder builderCondition = new AlertDialog.Builder(this);
+                final CharSequence[] arrayCondition = {"New", "Used"};
+                builderCondition.setTitle("Condition")
+                        .setSingleChoiceItems(arrayCondition, 2, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int position) {
+                                strCondition = (String) arrayCondition[position];
+                            }
+                        })
 
-                            .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int id) {
-                                    condition.setText(strCondition);
-                                    condition.clearFocus();
-                                }
-                            })
-                            .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int id) {
-                                    dialog.cancel();
-                                    condition.clearFocus();
-                                }
-                            });
+                        .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int id) {
+                                condition.setText(strCondition);
+                                condition.clearFocus();
+                            }
+                        })
+                        .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int id) {
+                                dialog.cancel();
+                                condition.clearFocus();
+                            }
+                        });
 
-                    builder.show();
-                }
+                builderCondition.show();
                 break;
             case R.id.using:
-                if (hasFocus) {
-                    AlertDialog.Builder builder = new AlertDialog.Builder(this);
-                    final CharSequence[] array = {"Gasoline", "Petrol", "Gas", "Petrol & Gas", "Gasoline & Gas"};
-                    builder.setTitle("Using Power")
-                            .setSingleChoiceItems(array, 5, new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int position) {
-                                    strUsing = (String) array[position];
-                                }
-                            })
+                AlertDialog.Builder builderUsing = new AlertDialog.Builder(this);
+                final CharSequence[] arrayUsing = {"Gasoline", "Petrol", "Gas", "Petrol & Gas", "Gasoline & Gas"};
+                builderUsing.setTitle("Using Power")
+                        .setSingleChoiceItems(arrayUsing, 5, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int position) {
+                                strUsing = (String) arrayUsing[position];
+                            }
+                        })
 
-                            .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int id) {
-                                    using.setText(strUsing);
-                                    using.clearFocus();
-                                }
-                            })
-                            .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int id) {
-                                    dialog.cancel();
-                                    using.clearFocus();
-                                }
-                            });
+                        .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int id) {
+                                using.setText(strUsing);
+                                using.clearFocus();
+                            }
+                        })
+                        .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int id) {
+                                dialog.cancel();
+                                using.clearFocus();
+                            }
+                        });
 
-                    builder.show();
-                }
+                builderUsing.show();
                 break;
             case R.id.licence:
-                if (hasFocus) {
-                    AlertDialog.Builder builder = new AlertDialog.Builder(this);
-                    final CharSequence[] array = {"With licence", "Without licence"};
-                    builder.setTitle("Licence")
-                            .setSingleChoiceItems(array, 2, new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int position) {
-                                    strLicence = (String) array[position];
-                                }
-                            })
+                AlertDialog.Builder builderLicence = new AlertDialog.Builder(this);
+                final CharSequence[] arrayLicence = {"With licence", "Without licence"};
+                builderLicence.setTitle("Licence")
+                        .setSingleChoiceItems(arrayLicence, 2, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int position) {
+                                strLicence = (String) arrayLicence[position];
+                            }
+                        })
 
-                            .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int id) {
-                                    licence.setText(strLicence);
-                                    licence.clearFocus();
-                                }
-                            })
-                            .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int id) {
-                                    dialog.cancel();
-                                    licence.clearFocus();
-                                }
-                            });
+                        .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int id) {
+                                licence.setText(strLicence);
+                                licence.clearFocus();
+                            }
+                        })
+                        .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int id) {
+                                dialog.cancel();
+                                licence.clearFocus();
+                            }
+                        });
 
-                    builder.show();
-                }
+                builderLicence.show();
                 break;
         }
+    }
+    private void showProgressDialog() {
+        if (mProgressDialog == null) {
+            mProgressDialog = new ProgressDialog(this);
+            mProgressDialog.setMessage("Loading...");
+            mProgressDialog.setIndeterminate(true);
+        }
+
+        mProgressDialog.show();
+    }
+
+    private void hideProgressDialog() {
+        if (mProgressDialog != null && mProgressDialog.isShowing()) {
+            mProgressDialog.hide();
+        }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        hideProgressDialog();
     }
 }

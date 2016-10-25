@@ -52,16 +52,16 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
-                android:background="@drawable/button_upload"
+                android:background="@drawable/button_no_car"
                 android:clickable="true"
                 android:padding="7dp">
 
                 <TextView
-                    android:fontFamily="sans-serif-light"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:fontFamily="sans-serif-light"
                     android:text="Upload the car to sell"
-                    android:textColor="@color/white" />
+                    android:textColor="@color/colorPrimary" />
             </LinearLayout>
 
 

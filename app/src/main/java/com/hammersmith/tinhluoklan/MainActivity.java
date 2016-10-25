@@ -169,7 +169,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
             startActivity(intent);
         } else if (id == R.id.nav_account) {
-
+            Intent intent = new Intent(MainActivity.this, AcountActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+            startActivity(intent);
         } else if (id == R.id.nav_my_product) {
             Intent intent = new Intent(MainActivity.this, MyCarActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);

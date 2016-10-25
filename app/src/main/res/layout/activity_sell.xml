@@ -323,8 +323,7 @@
                                     <EditText
                                         android:layout_width="match_parent"
                                         android:layout_height="wrap_content"
-                                        android:hint="Model"
-                                        android:singleLine="true" />
+                                        android:hint="Model" />
                                 </android.support.design.widget.TextInputLayout>
 
                                 <LinearLayout
@@ -342,8 +341,7 @@
                                             android:layout_width="match_parent"
                                             android:layout_height="wrap_content"
                                             android:hint="Year"
-                                            android:inputType="number"
-                                            android:singleLine="true" />
+                                            android:inputType="number" />
                                     </android.support.design.widget.TextInputLayout>
 
                                     <android.support.design.widget.TextInputLayout
@@ -355,8 +353,7 @@
                                         <EditText
                                             android:layout_width="match_parent"
                                             android:layout_height="wrap_content"
-                                            android:hint="Color"
-                                            android:singleLine="true" />
+                                            android:hint="Color" />
                                     </android.support.design.widget.TextInputLayout>
 
                                 </LinearLayout>
@@ -376,8 +373,7 @@
                                             android:id="@+id/transmission"
                                             android:layout_width="match_parent"
                                             android:layout_height="wrap_content"
-                                            android:hint="Transmission"
-                                            android:singleLine="true" />
+                                            android:hint="Transmission" />
                                     </android.support.design.widget.TextInputLayout>
 
                                     <android.support.design.widget.TextInputLayout
@@ -390,8 +386,7 @@
                                             android:id="@+id/condition"
                                             android:layout_width="match_parent"
                                             android:layout_height="wrap_content"
-                                            android:hint="Condition"
-                                            android:singleLine="true" />
+                                            android:hint="Condition" />
                                     </android.support.design.widget.TextInputLayout>
 
                                 </LinearLayout>
@@ -411,8 +406,7 @@
                                             android:layout_width="match_parent"
                                             android:layout_height="wrap_content"
                                             android:hint="Mileage"
-                                            android:inputType="number"
-                                            android:singleLine="true" />
+                                            android:inputType="number" />
                                     </android.support.design.widget.TextInputLayout>
 
                                     <android.support.design.widget.TextInputLayout
@@ -424,8 +418,7 @@
                                         <EditText
                                             android:layout_width="match_parent"
                                             android:layout_height="wrap_content"
-                                            android:hint="City"
-                                            android:singleLine="true" />
+                                            android:hint="City" />
                                     </android.support.design.widget.TextInputLayout>
 
                                 </LinearLayout>
@@ -458,8 +451,7 @@
                                             android:layout_width="match_parent"
                                             android:layout_height="wrap_content"
                                             android:hint="Price(USD)"
-                                            android:inputType="number"
-                                            android:singleLine="true" />
+                                            android:inputType="number" />
                                     </android.support.design.widget.TextInputLayout>
 
                                 </LinearLayout>
@@ -473,8 +465,7 @@
                                         android:id="@+id/licence"
                                         android:layout_width="match_parent"
                                         android:layout_height="wrap_content"
-                                        android:hint="Licence"
-                                        android:singleLine="true" />
+                                        android:hint="Licence" />
                                 </android.support.design.widget.TextInputLayout>
 
                                 <android.support.design.widget.TextInputLayout
@@ -486,8 +477,7 @@
                                         android:id="@+id/description"
                                         android:layout_width="match_parent"
                                         android:layout_height="wrap_content"
-                                        android:hint="Description"
-                                        android:singleLine="true" />
+                                        android:hint="Description" />
                                 </android.support.design.widget.TextInputLayout>
 
                             </LinearLayout>
