@@ -321,6 +321,7 @@
                                     android:layout_marginTop="15dp">
 
                                     <EditText
+                                        android:id="@+id/model"
                                         android:layout_width="match_parent"
                                         android:layout_height="wrap_content"
                                         android:hint="Model" />
@@ -338,6 +339,7 @@
                                         android:layout_weight="1">
 
                                         <EditText
+                                            android:id="@+id/year"
                                             android:layout_width="match_parent"
                                             android:layout_height="wrap_content"
                                             android:hint="Year"
@@ -351,6 +353,7 @@
                                         android:layout_weight="1">
 
                                         <EditText
+                                            android:id="@+id/color"
                                             android:layout_width="match_parent"
                                             android:layout_height="wrap_content"
                                             android:hint="Color" />
@@ -403,6 +406,7 @@
                                         android:layout_weight="1">
 
                                         <EditText
+                                            android:id="@+id/mileage"
                                             android:layout_width="match_parent"
                                             android:layout_height="wrap_content"
                                             android:hint="Mileage"
@@ -416,6 +420,7 @@
                                         android:layout_weight="1">
 
                                         <EditText
+                                            android:id="@+id/city"
                                             android:layout_width="match_parent"
                                             android:layout_height="wrap_content"
                                             android:hint="City" />
@@ -448,6 +453,7 @@
                                         android:layout_weight="1">
 
                                         <EditText
+                                            android:id="@+id/price"
                                             android:layout_width="match_parent"
                                             android:layout_height="wrap_content"
                                             android:hint="Price(USD)"
@@ -541,7 +547,7 @@
                                         android:id="@+id/address"
                                         android:layout_width="match_parent"
                                         android:layout_height="wrap_content"
-                                        android:hint="Address (optional)" />
+                                        android:hint="Address" />
                                 </android.support.design.widget.TextInputLayout>
 
                                 <android.support.design.widget.TextInputLayout
@@ -553,6 +559,7 @@
                                         android:id="@+id/email"
                                         android:layout_width="match_parent"
                                         android:layout_height="wrap_content"
+                                        android:focusable="false"
                                         android:hint="Email" />
                                 </android.support.design.widget.TextInputLayout>
 
@@ -578,7 +585,7 @@
                                         android:id="@+id/phone2"
                                         android:layout_width="match_parent"
                                         android:layout_height="wrap_content"
-                                        android:hint="Phone two (optional)"
+                                        android:hint="Alternate Phone"
                                         android:inputType="number" />
                                 </android.support.design.widget.TextInputLayout>
 

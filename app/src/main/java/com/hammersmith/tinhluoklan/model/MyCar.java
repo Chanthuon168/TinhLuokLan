@@ -45,6 +45,10 @@ public class MyCar {
         this.socialLink = socialLink;
     }
 
+    public MyCar(String image) {
+        this.image = image;
+    }
+
     public int getId() {
         return id;
     }
