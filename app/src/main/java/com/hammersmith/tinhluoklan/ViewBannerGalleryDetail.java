@@ -19,6 +19,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.ViewFlipper;
 
 import com.squareup.picasso.Picasso;
@@ -87,16 +88,14 @@ public class ViewBannerGalleryDetail extends RelativeLayout {
                                     Picasso.with(mContext).load(uri).into(iv);
 //                                    iv.setImageBitmap(bitmap);
                                     mViewFlipper.addView(iv);
-                                    if (!TextUtils.isEmpty(item.linkUrl) && item.linkUrl.startsWith("http://")) {
-                                        iv.setOnClickListener(new OnClickListener() {
-                                            @Override
-                                            public void onClick(View v) {
-                                                Intent intent = new Intent(Intent.ACTION_VIEW);
-                                                intent.setData(Uri.parse(item.linkUrl));
-                                                mContext.startActivity(intent);
-                                            }
-                                        });
-                                    }
+                                    iv.setOnClickListener(new OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
+                                            Intent intent = new Intent(mContext, ImageActivity.class);
+                                            intent.putExtra("carId", item.carId);
+                                            mContext.startActivity(intent);
+                                        }
+                                    });
 
                                     ImageView image = new ImageView(mContext);
                                     image.setPadding(3, 0, 3, 0);
@@ -341,9 +340,11 @@ public class ViewBannerGalleryDetail extends RelativeLayout {
         public String imageUrl;
         public String linkUrl;
         public String title;
+        public int carId;
 
-        public BannerItem(String imageUrl) {
+        public BannerItem(String imageUrl, int carId) {
             this.imageUrl = imageUrl;
+            this.carId = carId;
         }
     }
 

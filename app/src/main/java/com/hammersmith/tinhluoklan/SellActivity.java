@@ -32,6 +32,7 @@ import android.widget.Toast;
 import com.darsh.multipleimageselect.activities.AlbumSelectActivity;
 import com.darsh.multipleimageselect.helpers.Constants;
 import com.darsh.multipleimageselect.models.Image;
+import com.google.android.gms.common.api.Api;
 import com.hammersmith.tinhluoklan.adapter.CarMakeAdapter;
 import com.hammersmith.tinhluoklan.adapter.CategoryAdapter;
 import com.hammersmith.tinhluoklan.adapter.FavoriteAdapter;
@@ -39,6 +40,7 @@ import com.hammersmith.tinhluoklan.adapter.PhotoAdapter;
 import com.hammersmith.tinhluoklan.model.Category;
 import com.hammersmith.tinhluoklan.model.Favorite;
 import com.hammersmith.tinhluoklan.model.MyCar;
+import com.hammersmith.tinhluoklan.model.Sell;
 import com.hammersmith.tinhluoklan.model.User;
 import com.joanzapata.iconify.widget.IconTextView;
 import com.kosalgeek.android.photoutil.PhotoLoader;
@@ -47,7 +49,10 @@ import com.squareup.picasso.Request;
 
 import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -73,18 +78,25 @@ public class SellActivity extends AppCompatActivity implements CarMakeAdapter.Cl
     private ArrayList<String> imageList = new ArrayList<>();
     private List<String> fileName = new ArrayList<>();
     private List<String> images = new ArrayList<>();
+    private List<String> temList = new ArrayList<>();
     private EditText transmission, condition, using, licence, model, year, color, mileage, city, price, description, name, address, email, phone, phone2;
-    private String strTransmission, strCondition, strUsing, strLicence;
-    private ProgressDialog mProgressDialog;
-    private User user, userSocial;
+    private String currentDateTime, strSocialLink, strTransmission, strCondition, strUsing, strLicence, strModel, strYear, strColor, strMileage, strCity, strPrice, strDescription, strName, strAddress, strPhone, strPhone2;
+    private ProgressDialog mProgressDialog, dialog;
+    private User user, mUser, userSocial;
     private CheckBox checkBox;
     private MyCar myCar;
+    private Sell sell, mSell;
+    private int catId, numImage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sell);
         user = PrefUtils.getCurrentUser(SellActivity.this);
+        getUser();
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        currentDateTime = dateFormat.format(new Date());
+        strSocialLink = user.getSocialLink();
         checkBox = (CheckBox) findViewById(R.id.checkbox);
         city = (EditText) findViewById(R.id.city);
         model = (EditText) findViewById(R.id.model);
@@ -136,7 +148,7 @@ public class SellActivity extends AppCompatActivity implements CarMakeAdapter.Cl
         recyclerViewPhoto.setLayoutManager(layoutManagerPhoto);
         recyclerViewPhoto.setAdapter(photoAdapter);
         layoutManager = new LinearLayoutManager(this);
-        showProgressDialog();
+        showDialog();
         ApiInterface serviceCategory = ApiClient.getClient().create(ApiInterface.class);
         Call<List<Category>> callCategory = serviceCategory.getCategory();
         callCategory.enqueue(new Callback<List<Category>>() {
@@ -147,12 +159,12 @@ public class SellActivity extends AppCompatActivity implements CarMakeAdapter.Cl
                 recyclerView.setLayoutManager(layoutManager);
                 recyclerView.setAdapter(adapter);
                 adapter.setClickListener(SellActivity.this);
-                hideProgressDialog();
+                hideDialog();
             }
 
             @Override
             public void onFailure(Call<List<Category>> call, Throwable t) {
-                hideProgressDialog();
+
             }
         });
 
@@ -179,6 +191,7 @@ public class SellActivity extends AppCompatActivity implements CarMakeAdapter.Cl
 
     @Override
     public void itemClicked(View view, int position) {
+        catId = categories.get(position).getId();
         lCategory.setVisibility(View.GONE);
         lPhoto.setVisibility(View.VISIBLE);
         strProcess = "photo";
@@ -216,121 +229,120 @@ public class SellActivity extends AppCompatActivity implements CarMakeAdapter.Cl
                 }
                 break;
             case R.id.l_next:
-                uploadFile();
-//                if (strProcess.equals("category")) {
-//                    lPhoto.setVisibility(View.VISIBLE);
-//                    lCategory.setVisibility(View.GONE);
-//                    lInformation.setVisibility(View.GONE);
-//                    strProcess = "photo";
-//                    txtProcess.setText("2/3 Import your photo");
-//                    next.setText("Next ");
-//                    iconNext.setText("{fa-arrow-circle-right}");
-//                    l_next.setVisibility(View.VISIBLE);
-//                } else if (strProcess.equals("photo")) {
-//                    if (imgpath.size() < 1) {
-//                        dialogImport("Import your photos before continue!");
-//                    } else {
-//                        lCategory.setVisibility(View.GONE);
-//                        lPhoto.setVisibility(View.GONE);
-//                        lInformation.setVisibility(View.VISIBLE);
-//                        strProcess = "info";
-//                        txtProcess.setText("3/3 Enter information");
-//                        next.setText("Sell ");
-//                        iconNext.setText("{fa-check-circle}");
-//                        l_next.setVisibility(View.VISIBLE);
-//                        getUser();
-//                    }
-//                } else if (strProcess.equals("info")) {
-//                    if (name.getText().toString().equals("")) {
-//                        Snackbar snack = Snackbar.make(view, "Seller's name are required", Snackbar.LENGTH_LONG);
-//                        View v = snack.getView();
-//                        TextView tv = (TextView) v.findViewById(android.support.design.R.id.snackbar_text);
-//                        tv.setTextColor(Color.RED);
-//                        snack.show();
-//                    } else if (address.getText().toString().equals("")) {
-//                        Snackbar snack = Snackbar.make(view, "Seller's address are required", Snackbar.LENGTH_LONG);
-//                        View v = snack.getView();
-//                        TextView tv = (TextView) v.findViewById(android.support.design.R.id.snackbar_text);
-//                        tv.setTextColor(Color.RED);
-//                        snack.show();
-//                    } else if (email.getText().toString().equals("")) {
-//                        Snackbar snack = Snackbar.make(view, "Seller's email are required", Snackbar.LENGTH_LONG);
-//                        View v = snack.getView();
-//                        TextView tv = (TextView) v.findViewById(android.support.design.R.id.snackbar_text);
-//                        tv.setTextColor(Color.RED);
-//                        snack.show();
-//                    } else if (phone.getText().toString().equals("")) {
-//                        Snackbar snack = Snackbar.make(view, "Seller's phone are required", Snackbar.LENGTH_LONG);
-//                        View v = snack.getView();
-//                        TextView tv = (TextView) v.findViewById(android.support.design.R.id.snackbar_text);
-//                        tv.setTextColor(Color.RED);
-//                        snack.show();
-//                    } else if (model.getText().toString().equals("")) {
-//                        Snackbar snack = Snackbar.make(view, "Model are required", Snackbar.LENGTH_LONG);
-//                        View v = snack.getView();
-//                        TextView tv = (TextView) v.findViewById(android.support.design.R.id.snackbar_text);
-//                        tv.setTextColor(Color.RED);
-//                        snack.show();
-//                    } else if (year.getText().toString().equals("")) {
-//                        Snackbar snack = Snackbar.make(view, "Year are required", Snackbar.LENGTH_LONG);
-//                        View v = snack.getView();
-//                        TextView tv = (TextView) v.findViewById(android.support.design.R.id.snackbar_text);
-//                        tv.setTextColor(Color.RED);
-//                        snack.show();
-//                    } else if (color.getText().toString().equals("")) {
-//                        Snackbar snack = Snackbar.make(view, "Color are required", Snackbar.LENGTH_LONG);
-//                        View v = snack.getView();
-//                        TextView tv = (TextView) v.findViewById(android.support.design.R.id.snackbar_text);
-//                        tv.setTextColor(Color.RED);
-//                        snack.show();
-//                    } else if (transmission.getText().toString().equals("")) {
-//                        Snackbar snack = Snackbar.make(view, "Transmission are required", Snackbar.LENGTH_LONG);
-//                        View v = snack.getView();
-//                        TextView tv = (TextView) v.findViewById(android.support.design.R.id.snackbar_text);
-//                        tv.setTextColor(Color.RED);
-//                        snack.show();
-//                    } else if (condition.getText().toString().equals("")) {
-//                        Snackbar snack = Snackbar.make(view, "Condition are required", Snackbar.LENGTH_LONG);
-//                        View v = snack.getView();
-//                        TextView tv = (TextView) v.findViewById(android.support.design.R.id.snackbar_text);
-//                        tv.setTextColor(Color.RED);
-//                        snack.show();
-//                    } else if (city.getText().toString().equals("")) {
-//                        Snackbar snack = Snackbar.make(view, "City are required", Snackbar.LENGTH_LONG);
-//                        View v = snack.getView();
-//                        TextView tv = (TextView) v.findViewById(android.support.design.R.id.snackbar_text);
-//                        tv.setTextColor(Color.RED);
-//                        snack.show();
-//                    } else if (using.getText().toString().equals("")) {
-//                        Snackbar snack = Snackbar.make(view, "Using power are required", Snackbar.LENGTH_LONG);
-//                        View v = snack.getView();
-//                        TextView tv = (TextView) v.findViewById(android.support.design.R.id.snackbar_text);
-//                        tv.setTextColor(Color.RED);
-//                        snack.show();
-//                    } else if (price.getText().toString().equals("")) {
-//                        Snackbar snack = Snackbar.make(view, "Price are required", Snackbar.LENGTH_LONG);
-//                        View v = snack.getView();
-//                        TextView tv = (TextView) v.findViewById(android.support.design.R.id.snackbar_text);
-//                        tv.setTextColor(Color.RED);
-//                        snack.show();
-//                    } else if (licence.getText().toString().equals("")) {
-//                        Snackbar snack = Snackbar.make(view, "Licence are required", Snackbar.LENGTH_LONG);
-//                        View v = snack.getView();
-//                        TextView tv = (TextView) v.findViewById(android.support.design.R.id.snackbar_text);
-//                        tv.setTextColor(Color.RED);
-//                        snack.show();
-//                    } else {
-//                        if (checkBox.isChecked()) {
-//                            uploadFile();
-//                        } else {
-//                            Snackbar snack = Snackbar.make(view, "Please agree term and condition.", Snackbar.LENGTH_LONG);
-//                            View v = snack.getView();
-//                            TextView tv = (TextView) v.findViewById(android.support.design.R.id.snackbar_text);
-//                            tv.setTextColor(Color.RED);
-//                            snack.show();
-//                        }
-//                    }
-//                }
+                if (strProcess.equals("category")) {
+                    lPhoto.setVisibility(View.VISIBLE);
+                    lCategory.setVisibility(View.GONE);
+                    lInformation.setVisibility(View.GONE);
+                    strProcess = "photo";
+                    txtProcess.setText("2/3 Import your photo");
+                    next.setText("Next ");
+                    iconNext.setText("{fa-arrow-circle-right}");
+                    l_next.setVisibility(View.VISIBLE);
+                } else if (strProcess.equals("photo")) {
+                    if (imgpath.size() < 1) {
+                        dialogImport("Import your photos before continue!");
+                    } else {
+                        lCategory.setVisibility(View.GONE);
+                        lPhoto.setVisibility(View.GONE);
+                        lInformation.setVisibility(View.VISIBLE);
+                        strProcess = "info";
+                        txtProcess.setText("3/3 Enter information");
+                        next.setText("Sell ");
+                        iconNext.setText("{fa-check-circle}");
+                        l_next.setVisibility(View.VISIBLE);
+                        getUser();
+                    }
+                } else if (strProcess.equals("info")) {
+                    if (name.getText().toString().equals("")) {
+                        Snackbar snack = Snackbar.make(view, "Seller's name are required", Snackbar.LENGTH_LONG);
+                        View v = snack.getView();
+                        TextView tv = (TextView) v.findViewById(android.support.design.R.id.snackbar_text);
+                        tv.setTextColor(Color.RED);
+                        snack.show();
+                    } else if (address.getText().toString().equals("")) {
+                        Snackbar snack = Snackbar.make(view, "Seller's address are required", Snackbar.LENGTH_LONG);
+                        View v = snack.getView();
+                        TextView tv = (TextView) v.findViewById(android.support.design.R.id.snackbar_text);
+                        tv.setTextColor(Color.RED);
+                        snack.show();
+                    } else if (email.getText().toString().equals("")) {
+                        Snackbar snack = Snackbar.make(view, "Seller's email are required", Snackbar.LENGTH_LONG);
+                        View v = snack.getView();
+                        TextView tv = (TextView) v.findViewById(android.support.design.R.id.snackbar_text);
+                        tv.setTextColor(Color.RED);
+                        snack.show();
+                    } else if (phone.getText().toString().equals("")) {
+                        Snackbar snack = Snackbar.make(view, "Seller's phone are required", Snackbar.LENGTH_LONG);
+                        View v = snack.getView();
+                        TextView tv = (TextView) v.findViewById(android.support.design.R.id.snackbar_text);
+                        tv.setTextColor(Color.RED);
+                        snack.show();
+                    } else if (model.getText().toString().equals("")) {
+                        Snackbar snack = Snackbar.make(view, "Model are required", Snackbar.LENGTH_LONG);
+                        View v = snack.getView();
+                        TextView tv = (TextView) v.findViewById(android.support.design.R.id.snackbar_text);
+                        tv.setTextColor(Color.RED);
+                        snack.show();
+                    } else if (year.getText().toString().equals("")) {
+                        Snackbar snack = Snackbar.make(view, "Year are required", Snackbar.LENGTH_LONG);
+                        View v = snack.getView();
+                        TextView tv = (TextView) v.findViewById(android.support.design.R.id.snackbar_text);
+                        tv.setTextColor(Color.RED);
+                        snack.show();
+                    } else if (color.getText().toString().equals("")) {
+                        Snackbar snack = Snackbar.make(view, "Color are required", Snackbar.LENGTH_LONG);
+                        View v = snack.getView();
+                        TextView tv = (TextView) v.findViewById(android.support.design.R.id.snackbar_text);
+                        tv.setTextColor(Color.RED);
+                        snack.show();
+                    } else if (transmission.getText().toString().equals("")) {
+                        Snackbar snack = Snackbar.make(view, "Transmission are required", Snackbar.LENGTH_LONG);
+                        View v = snack.getView();
+                        TextView tv = (TextView) v.findViewById(android.support.design.R.id.snackbar_text);
+                        tv.setTextColor(Color.RED);
+                        snack.show();
+                    } else if (condition.getText().toString().equals("")) {
+                        Snackbar snack = Snackbar.make(view, "Condition are required", Snackbar.LENGTH_LONG);
+                        View v = snack.getView();
+                        TextView tv = (TextView) v.findViewById(android.support.design.R.id.snackbar_text);
+                        tv.setTextColor(Color.RED);
+                        snack.show();
+                    } else if (city.getText().toString().equals("")) {
+                        Snackbar snack = Snackbar.make(view, "City are required", Snackbar.LENGTH_LONG);
+                        View v = snack.getView();
+                        TextView tv = (TextView) v.findViewById(android.support.design.R.id.snackbar_text);
+                        tv.setTextColor(Color.RED);
+                        snack.show();
+                    } else if (using.getText().toString().equals("")) {
+                        Snackbar snack = Snackbar.make(view, "Using power are required", Snackbar.LENGTH_LONG);
+                        View v = snack.getView();
+                        TextView tv = (TextView) v.findViewById(android.support.design.R.id.snackbar_text);
+                        tv.setTextColor(Color.RED);
+                        snack.show();
+                    } else if (price.getText().toString().equals("")) {
+                        Snackbar snack = Snackbar.make(view, "Price are required", Snackbar.LENGTH_LONG);
+                        View v = snack.getView();
+                        TextView tv = (TextView) v.findViewById(android.support.design.R.id.snackbar_text);
+                        tv.setTextColor(Color.RED);
+                        snack.show();
+                    } else if (licence.getText().toString().equals("")) {
+                        Snackbar snack = Snackbar.make(view, "Licence are required", Snackbar.LENGTH_LONG);
+                        View v = snack.getView();
+                        TextView tv = (TextView) v.findViewById(android.support.design.R.id.snackbar_text);
+                        tv.setTextColor(Color.RED);
+                        snack.show();
+                    } else {
+                        if (checkBox.isChecked()) {
+                            uploadFile();
+                        } else {
+                            Snackbar snack = Snackbar.make(view, "Please agree term and condition.", Snackbar.LENGTH_LONG);
+                            View v = snack.getView();
+                            TextView tv = (TextView) v.findViewById(android.support.design.R.id.snackbar_text);
+                            tv.setTextColor(Color.RED);
+                            snack.show();
+                        }
+                    }
+                }
                 break;
             case R.id.lImportPhoto:
                 Intent intent = new Intent(this, AlbumSelectActivity.class);
@@ -349,25 +361,24 @@ public class SellActivity extends AppCompatActivity implements CarMakeAdapter.Cl
                 bitmap.compress(Bitmap.CompressFormat.JPEG, 70, stream);
                 byte[] byteFormat = stream.toByteArray();
                 final String encoded = Base64.encodeToString(byteFormat, Base64.NO_WRAP);
-                myCar = new MyCar(encoded);
+                sell = new Sell(encoded);
                 ApiInterface serviceUploadFile = ApiClient.getClient().create(ApiInterface.class);
-                Call<MyCar> callUploadFile = serviceUploadFile.uploadFile(myCar);
-                callUploadFile.enqueue(new Callback<MyCar>() {
+                Call<Sell> callUploadFile = serviceUploadFile.uploadFile(sell);
+                callUploadFile.enqueue(new Callback<Sell>() {
                     @Override
-                    public void onResponse(Call<MyCar> call, Response<MyCar> response) {
-                        fileName.add(response.message());
-                        images.add(response.message());
+                    public void onResponse(Call<Sell> call, Response<Sell> response) {
+                        mSell = response.body();
+                        fileName.add(mSell.getMsg());
+                        images.add(mSell.getMsg());
                         if (fileName.size() == imageList.size()) {
-                            saveProduct(response.message());
+                            saveProduct();
                         }
-//                        hideProgressDialog();
                     }
 
                     @Override
-                    public void onFailure(Call<MyCar> call, Throwable t) {
-//                        dialogError("Error while uploading product");
+                    public void onFailure(Call<Sell> call, Throwable t) {
                         hideProgressDialog();
-                        Log.d("onFailure", t.getMessage());
+                        dialogError("Error while uploading product");
                     }
                 });
             } catch (FileNotFoundException e) {
@@ -375,8 +386,108 @@ public class SellActivity extends AppCompatActivity implements CarMakeAdapter.Cl
         }
     }
 
-    private void saveProduct(String msg) {
-        Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_SHORT).show();
+    private void saveProduct() {
+        strModel = model.getText().toString().trim();
+        sell = new Sell(catId, strSocialLink, strModel);
+        ApiInterface serviceSaveProduct = ApiClient.getClient().create(ApiInterface.class);
+        Call<Sell> callSaveProduct = serviceSaveProduct.saveProduct(sell);
+        callSaveProduct.enqueue(new Callback<Sell>() {
+            @Override
+            public void onResponse(Call<Sell> call, Response<Sell> response) {
+                mSell = response.body();
+                saveImage(mSell.getCarId());
+            }
+
+            @Override
+            public void onFailure(Call<Sell> call, Throwable t) {
+                hideProgressDialog();
+                dialogError("Error while uploading product");
+            }
+        });
+
+    }
+
+    private void saveImage(final int carId) {
+        for (final String nameList : fileName) {
+            sell = new Sell(carId, nameList);
+            ApiInterface serviceSaveImage = ApiClient.getClient().create(ApiInterface.class);
+            Call<Sell> callSaveImage = serviceSaveImage.saveImage(sell);
+            callSaveImage.enqueue(new Callback<Sell>() {
+                @Override
+                public void onResponse(Call<Sell> call, Response<Sell> response) {
+                    mSell = response.body();
+                    temList.add(String.valueOf(mSell.getImgId()));
+                    if (temList.size() == imageList.size()) {
+                        saveProductDetail(carId, mSell.getImgId());
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<Sell> call, Throwable t) {
+                    hideProgressDialog();
+                    dialogError("Error while uploading product");
+                }
+            });
+        }
+    }
+
+    private void saveProductDetail(int carId, int imgId) {
+        numImage = imageList.size();
+        strYear = year.getText().toString().trim();
+        strColor = color.getText().toString().trim();
+        strMileage = mileage.getText().toString().trim();
+        strCity = city.getText().toString().trim();
+        strPrice = price.getText().toString().trim();
+        strDescription = description.getText().toString().trim();
+        strName = name.getText().toString().trim();
+        strAddress = address.getText().toString().trim();
+        strPhone = phone.getText().toString().trim();
+        strPhone2 = phone2.getText().toString().trim();
+        sell = new Sell(carId, numImage, imgId, strPrice, strYear, strCondition, strTransmission, strUsing, strMileage, strColor, strCity, strLicence, strDescription, strName, strAddress, strPhone, strPhone2, strSocialLink, currentDateTime);
+        ApiInterface serviceSaveProductDetail = ApiClient.getClient().create(ApiInterface.class);
+        Call<Sell> callSaveProductDetail = serviceSaveProductDetail.saveProductDetail(sell);
+        callSaveProductDetail.enqueue(new Callback<Sell>() {
+            @Override
+            public void onResponse(Call<Sell> call, Response<Sell> response) {
+                mSell = response.body();
+                if (mSell.getMsg().equals("success")) {
+                    imageList.clear();
+                    fileName.clear();
+                    strProcess = "category";
+                    hideProgressDialog();
+                    dialogSuccess("Your car uploaded successfully");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Sell> call, Throwable t) {
+                hideProgressDialog();
+                dialogError("Error while uploading product");
+            }
+        });
+    }
+
+    private void dialogSuccess(String strMessage) {
+        LayoutInflater factory = LayoutInflater.from(this);
+        final View viewDialog = factory.inflate(R.layout.layout_dialog_new, null);
+        final AlertDialog dialog = new AlertDialog.Builder(this).create();
+        dialog.setView(viewDialog);
+        TextView message = (TextView) viewDialog.findViewById(R.id.message);
+        message.setText(strMessage);
+        IconTextView icon = (IconTextView) viewDialog.findViewById(R.id.icon);
+        icon.setText("{fa-check-circle-o}");
+        TextView cancel = (TextView) viewDialog.findViewById(R.id.cancel);
+        cancel.setText("SUCCESS");
+        viewDialog.findViewById(R.id.layout).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+//                pushNotification();
+                startActivity(new Intent(SellActivity.this, MainActivity.class));
+                finish();
+            }
+        });
+
+        dialog.show();
     }
 
     private void dialogError(String strMessage) {
@@ -408,12 +519,12 @@ public class SellActivity extends AppCompatActivity implements CarMakeAdapter.Cl
         callUser.enqueue(new Callback<User>() {
             @Override
             public void onResponse(Call<User> call, Response<User> response) {
-                user = response.body();
-                name.setText(user.getName());
-                email.setText(user.getEmail());
-                address.setText(user.getAddress());
-                phone.setText(user.getPhone());
-                phone2.setText(user.getPhone2());
+                mUser = response.body();
+                name.setText(mUser.getName());
+                email.setText(mUser.getEmail());
+                address.setText(mUser.getAddress());
+                phone.setText(mUser.getPhone());
+                phone2.setText(mUser.getPhone2());
             }
 
             @Override
@@ -619,10 +730,27 @@ public class SellActivity extends AppCompatActivity implements CarMakeAdapter.Cl
         }
     }
 
+    private void showDialog() {
+        if (dialog == null) {
+            dialog = new ProgressDialog(this);
+            dialog.setMessage("Loading...");
+            dialog.setIndeterminate(true);
+        }
+
+        dialog.show();
+    }
+
+    private void hideDialog() {
+        if (dialog != null && dialog.isShowing()) {
+            dialog.hide();
+        }
+    }
+
+
     private void showProgressDialog() {
         if (mProgressDialog == null) {
             mProgressDialog = new ProgressDialog(this);
-            mProgressDialog.setMessage("Loading...");
+            mProgressDialog.setMessage("Uploading...");
             mProgressDialog.setIndeterminate(true);
         }
 
@@ -639,6 +767,7 @@ public class SellActivity extends AppCompatActivity implements CarMakeAdapter.Cl
     public void onDestroy() {
         super.onDestroy();
         hideProgressDialog();
+        hideDialog();
     }
 
     @Override

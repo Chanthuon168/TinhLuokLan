@@ -184,8 +184,8 @@ public class CarDedailActivity extends AppCompatActivity implements View.OnClick
                 final ViewBannerGalleryDetail viewBannerGallery = (ViewBannerGalleryDetail) findViewById(R.id.viewBannerGallery);
                 final ArrayList<ViewBannerGalleryDetail.BannerItem> listData = new ArrayList<ViewBannerGalleryDetail.BannerItem>();
                 for (int i = 0; i < images.size(); i++) {
-                    Log.d("imageList", ApiClient.BASE_URL + images.get(i).getImage());
-                    listData.add(viewBannerGallery.new BannerItem(ApiClient.BASE_URL + images.get(i).getImage()));
+                    Log.d("imageList", "" + id);
+                    listData.add(viewBannerGallery.new BannerItem(ApiClient.BASE_URL + images.get(i).getImage(), id));
                 }
                 viewBannerGallery.flip(listData, true);
             }
