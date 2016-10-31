@@ -56,6 +56,16 @@ public class User {
         this.password = password;
     }
 
+    public User(String socialLink, String name, String email, String address, String phone, String phone2, String photo) {
+        this.socialLink = socialLink;
+        this.name = name;
+        this.email = email;
+        this.address = address;
+        this.phone = phone;
+        this.phone2 = phone2;
+        this.photo = photo;
+    }
+
     public String getMsg() {
         return msg;
     }

@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/tab_home_markey_titlelayout"
+    android:layout_width="fill_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent">
+
+        <ViewFlipper
+            android:id="@+id/viewflipper"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent" />
+    </LinearLayout>
+
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:visibility="visible">
+
+        <LinearLayout
+            android:id="@+id/layout_subtitle"
+            android:layout_width="match_parent"
+            android:layout_height="25dp"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentLeft="true"
+            android:background="#90000000"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:spacing="16dp">
+
+            <TextView
+                android:id="@+id/tv_subtitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:paddingLeft="13dip"
+                android:text=""
+                android:textColor="#ffffff" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/layout_dots"
+            android:layout_width="wrap_content"
+            android:layout_height="25dp"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="13dip"
+            android:gravity="center_vertical"
+            android:orientation="horizontal" />
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/tv_hint"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_centerInParent="true"
+        android:gravity="center" />
+</RelativeLayout>

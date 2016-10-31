@@ -80,7 +80,7 @@ public class SellActivity extends AppCompatActivity implements CarMakeAdapter.Cl
     private List<String> images = new ArrayList<>();
     private List<String> temList = new ArrayList<>();
     private EditText transmission, condition, using, licence, model, year, color, mileage, city, price, description, name, address, email, phone, phone2;
-    private String currentDateTime, strSocialLink, strTransmission, strCondition, strUsing, strLicence, strModel, strYear, strColor, strMileage, strCity, strPrice, strDescription, strName, strAddress, strPhone, strPhone2;
+    private String currentDateTime, strSocialLink, strUsername, strTransmission, strCondition, strUsing, strLicence, strModel, strYear, strColor, strMileage, strCity, strPrice, strDescription, strName, strAddress, strPhone, strPhone2;
     private ProgressDialog mProgressDialog, dialog;
     private User user, mUser, userSocial;
     private CheckBox checkBox;
@@ -97,6 +97,7 @@ public class SellActivity extends AppCompatActivity implements CarMakeAdapter.Cl
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         currentDateTime = dateFormat.format(new Date());
         strSocialLink = user.getSocialLink();
+        strUsername = user.getName();
         checkBox = (CheckBox) findViewById(R.id.checkbox);
         city = (EditText) findViewById(R.id.city);
         model = (EditText) findViewById(R.id.model);
@@ -346,7 +347,7 @@ public class SellActivity extends AppCompatActivity implements CarMakeAdapter.Cl
                 break;
             case R.id.lImportPhoto:
                 Intent intent = new Intent(this, AlbumSelectActivity.class);
-                intent.putExtra(Constants.INTENT_EXTRA_LIMIT, 6);
+                intent.putExtra(Constants.INTENT_EXTRA_LIMIT, 5);
                 startActivityForResult(intent, Constants.REQUEST_CODE);
                 break;
         }
@@ -481,13 +482,32 @@ public class SellActivity extends AppCompatActivity implements CarMakeAdapter.Cl
         viewDialog.findViewById(R.id.layout).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                pushNotification();
+                pushNotification();
                 startActivity(new Intent(SellActivity.this, MainActivity.class));
                 finish();
             }
         });
 
         dialog.show();
+    }
+
+    private void pushNotification() {
+        String strMessage = strUsername + " recently added new product";
+        String strImage = ApiClient.BASE_URL + "images/" + images.get(0);
+        sell = new Sell(strMessage, strImage);
+        ApiInterface servicePushNotification = ApiClient.getClient().create(ApiInterface.class);
+        Call<Sell> callPushNotification = servicePushNotification.pushNotification(sell);
+        callPushNotification.enqueue(new Callback<Sell>() {
+            @Override
+            public void onResponse(Call<Sell> call, Response<Sell> response) {
+
+            }
+
+            @Override
+            public void onFailure(Call<Sell> call, Throwable t) {
+
+            }
+        });
     }
 
     private void dialogError(String strMessage) {

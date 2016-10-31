@@ -52,6 +52,8 @@ public class Sell {
     private int imgId;
     @SerializedName("created_at")
     private String createdAt;
+    @SerializedName("message")
+    private String message;
 
 
     public Sell() {
@@ -92,6 +94,11 @@ public class Sell {
         this.phone2 = phone2;
         this.socialLink = socialLink;
         this.createdAt = createdAt;
+    }
+
+    public Sell(String message, String image) {
+        this.message = message;
+        this.image = image;
     }
 
     public String getImage() {

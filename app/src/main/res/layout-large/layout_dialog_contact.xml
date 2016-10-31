@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorPrimary"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:padding="20dp">
+
+        <TextView
+            android:textAllCaps="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Contact Seller"
+            android:textColor="@color/white"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/l_call"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/button_item"
+        android:clickable="true"
+        android:orientation="horizontal"
+        android:paddingBottom="15dp"
+        android:paddingLeft="20dp"
+        android:paddingTop="15dp">
+
+        <com.joanzapata.iconify.widget.IconTextView
+            android:textColor="@color/primary_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="{fa-phone-square}"
+            android:textSize="20sp" />
+
+        <TextView
+            android:textColor="@color/primary_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:text="Call" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/l_message"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/button_item"
+        android:clickable="true"
+        android:orientation="horizontal"
+        android:paddingBottom="15dp"
+        android:paddingLeft="20dp"
+        android:paddingTop="15dp">
+
+        <com.joanzapata.iconify.widget.IconTextView
+            android:textColor="@color/primary_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="{fa-commenting}"
+            android:textSize="20sp" />
+
+        <TextView
+            android:textColor="@color/primary_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:text="Message" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/l_email"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/button_item"
+        android:clickable="true"
+        android:orientation="horizontal"
+        android:paddingBottom="15dp"
+        android:paddingLeft="20dp"
+        android:paddingTop="15dp">
+
+        <com.joanzapata.iconify.widget.IconTextView
+            android:textColor="@color/primary_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="{fa-envelope}"
+            android:textSize="20sp" />
+
+        <TextView
+            android:textColor="@color/primary_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:text="Email" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/ok"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/button_item"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:padding="15dp"
+        android:textAllCaps="true">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="OK"
+            android:textColor="@color/colorAccent"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+    </LinearLayout>
+
+
+</LinearLayout>

@@ -40,7 +40,7 @@ public class ViewBannerGallery extends RelativeLayout {
     private ArrayList<BannerItem> mListData = new ArrayList<>();
     LinearLayout layoutBannerIndex;
     private boolean beforeSizeChanged = true;
-    private int dotSize = 12;
+    private int dotSize = 11;
 
 
     private Handler mHandler = new Handler() {

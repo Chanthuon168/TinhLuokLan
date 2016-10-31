@@ -394,6 +394,7 @@ public class MyCarAdapter extends RecyclerView.Adapter<MyCarAdapter.MyViewHolder
                 dialog.dismiss();
             }
         });
+        viewDialog.findViewById(R.id.l_call).setVisibility(View.GONE);
         viewDialog.findViewById(R.id.l_call).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
